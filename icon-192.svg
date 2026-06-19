@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#0d0d12"/>
+  <rect width="192" height="192" rx="40" fill="url(#g)"/>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6c63ff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0d0d12" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Chat bubble -->
+  <rect x="32" y="44" width="128" height="84" rx="20" fill="#6c63ff"/>
+  <polygon points="52,128 52,148 76,128" fill="#6c63ff"/>
+  <!-- Lines inside bubble -->
+  <rect x="52" y="68" width="88" height="10" rx="5" fill="rgba(255,255,255,0.85)"/>
+  <rect x="52" y="86" width="64" height="10" rx="5" fill="rgba(255,255,255,0.5)"/>
+  <rect x="52" y="104" width="76" height="10" rx="5" fill="rgba(255,255,255,0.35)"/>
+  <!-- Spark -->
+  <circle cx="148" cy="44" r="16" fill="#22d3a5"/>
+  <text x="148" y="50" text-anchor="middle" font-size="16" fill="#0d0d12">✦</text>
+</svg>

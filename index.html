@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TalkGo</title>
+
+  <!-- PWA必須メタタグ -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TalkGo">
+  <meta name="theme-color" content="#0d0d12">
+  <meta name="description" content="1日10フレーズで英会話を身につける旅行英会話アプリ">
+
+  <!-- manifest & icons -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-192.svg">
+  <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─────────────────────────────
+       TOKENS
+    ───────────────────────────── */
+    :root {
+      --ink:      #0d0d12;
+      --surf:     #16161e;
+      --raise:    #1e1e2a;
+      --rim:      rgba(255,255,255,0.07);
+      --pur:      #6c63ff;
+      --pur-lt:   #9d97ff;
+      --glow:     rgba(108,99,255,0.4);
+      --grn:      #22d3a5;
+      --amb:      #f59e0b;
+      --red:      #f43f5e;
+      --txt:      #efeffa;
+      --sub:      #7a7a94;
+      --st:       env(safe-area-inset-top, 0px);
+      --sb:       env(safe-area-inset-bottom, 0px);
+    }
+
+    /* ─────────────────────────────
+       RESET
+    ───────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none; -webkit-user-select: none;
+    }
+    html, body {
+      height: 100%; height: 100svh;
+      overflow: hidden;
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      background: var(--ink);
+      color: var(--txt);
+    }
+
+    /* ─────────────────────────────
+       APP SHELL  (全画面固定)
+    ───────────────────────────── */
+    #app {
+      position: fixed;
+      inset: 0;
+      max-width: 430px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      background: var(--ink);
+      /* PCで見たとき境界線 */
+      box-shadow: 0 0 0 1px var(--rim);
+    }
+
+    /* ─────────────────────────────
+       SCREENS
+    ───────────────────────────── */
+    #screens {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .screen {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: calc(var(--st) + 14px) 16px calc(var(--sb) + 82px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+    }
+    .screen.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ─────────────────────────────
+       BOTTOM NAV  (固定)
+    ───────────────────────────── */
+    .bnav {
+      flex-shrink: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: rgba(22,22,30,.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--rim);
+      padding: 6px 0 calc(6px + var(--sb));
+    }
+    .bnav-btn {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px; background: none; border: none;
+      color: var(--sub); font-size: 10px; font-weight: 600;
+      cursor: pointer; padding: 6px 4px;
+      transition: color .15s;
+    }
+    .bnav-btn .ni { font-size: 22px; line-height: 1; }
+    .bnav-btn.active { color: var(--pur-lt); }
+    .bnav-btn .ndot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: transparent; transition: background .15s;
+    }
+    .bnav-btn.active .ndot { background: var(--pur-lt); }
+
+    /* ─────────────────────────────
+       SHARED COMPONENTS
+    ───────────────────────────── */
+    .phead {
+      display: flex; justify-content: space-between;
+      align-items: center; padding-top: 4px;
+    }
+    .ptitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px; font-weight: 700; letter-spacing: -.5px;
+    }
+    .ptitle em { font-style: normal; color: var(--pur-lt); }
+    .badge {
+      font-size: 11px; font-weight: 700;
+      color: var(--pur-lt);
+      background: rgba(108,99,255,.15);
+      border: 1px solid rgba(108,99,255,.3);
+      padding: 4px 10px; border-radius: 20px;
+    }
+
+    .card {
+      background: var(--surf);
+      border-radius: 18px;
+      border: 1px solid var(--rim);
+      padding: 16px;
+    }
+    .clabel {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--sub); margin-bottom: 10px;
+    }
+
+    .btn {
+      width: 100%; padding: 15px; border-radius: 15px;
+      font-size: 15px; font-weight: 700; border: none;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+      transition: transform .1s, opacity .15s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-white  { background: #fff; color: #000; }
+    .btn-ghost  { background: var(--raise); color: var(--txt); border: 1px solid var(--rim); }
+    .btn-pur    { background: var(--pur); color: #fff; box-shadow: 0 4px 18px var(--glow); }
+    .btn-grn    { background: var(--grn); color: #000; }
+
+    .tag { display: inline-flex; align-items: center; gap: 4px;
+      padding: 7px 14px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; white-space: nowrap;
+      cursor: pointer; border: 1px solid transparent;
+      transition: all .18s; }
+    .tag-off { background: var(--raise); color: var(--sub); border-color: var(--rim); }
+    .tag-on  { background: var(--pur); color: #fff; box-shadow: 0 2px 12px var(--glow); }
+
+    /* Scroll row */
+    .hscroll {
+      display: flex; gap: 8px; overflow-x: auto;
+      padding: 2px 0; scrollbar-width: none;
+    }
+    .hscroll::-webkit-scrollbar { display: none; }
+
+    /* ─────────────────────────────
+       HOME
+    ───────────────────────────── */
+    .streak-card {
+      background: linear-gradient(140deg,#1a1926,#13131c);
+      border-radius: 18px;
+      border: 1px solid rgba(108,99,255,.18);
+      padding: 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .streak-flame { font-size: 40px; filter: drop-shadow(0 0 10px rgba(245,158,11,.55)); }
+    .streak-days  { font-family:'Inter',sans-serif; font-size:30px; font-weight:700; color:var(--amb); line-height:1; }
+    .streak-days span { font-size:13px; font-weight:400; color:var(--sub); margin-left:4px; }
+    .streak-sub   { font-size:12px; color:var(--sub); margin-top:2px; }
+
+    .prog-row  { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .prog-lbl  { font-size:14px; color:var(--sub); }
+    .prog-cnt  { font-family:'Inter',sans-serif; font-size:15px; font-weight:700; color:var(--grn); }
+    .prog-track { background:var(--raise); height:8px; border-radius:4px; overflow:hidden; }
+    .prog-fill  { background:linear-gradient(90deg,var(--grn),#6ee7b7);
+      height:100%; border-radius:4px; transition:width .4s cubic-bezier(.4,0,.2,1); }
+    .prog-dots  { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+    .pdot { width:8px; height:8px; border-radius:50%;
+      background:var(--raise); border:1px solid var(--rim); transition:background .2s; }
+    .pdot.done { background:var(--grn); border-color:var(--grn); }
+
+    .phrase-hero {
+      background: linear-gradient(160deg,#1a1928,#111119);
+      border-radius: 20px; border: 1px solid rgba(108,99,255,.14);
+      padding: 20px; position: relative; overflow: hidden;
+    }
+    .phrase-hero::before {
+      content:''; position:absolute; top:-50px; right:-50px;
+      width:180px; height:180px;
+      background:radial-gradient(circle,rgba(108,99,255,.16),transparent 70%);
+      pointer-events:none;
+    }
+    .ph-en { font-family:'Inter',sans-serif; font-size:23px; font-weight:700; line-height:1.3; margin-bottom:6px; }
+    .ph-jp { font-size:14px; color:var(--sub); margin-bottom:18px; }
+    .ph-acts { display:flex; gap:10px; }
+    .ph-btn {
+      flex:1; padding:12px 8px; border-radius:13px;
+      font-size:13px; font-weight:700; border:none; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:5px;
+      transition:transform .1s;
+    }
+    .ph-btn:active { transform:scale(.95); }
+    .ph-btn-play { background:#fff; color:#000; }
+    .ph-btn-next { background:var(--raise); color:var(--txt); border:1px solid var(--rim); }
+
+    .stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .stat-box {
+      background:var(--surf); border:1px solid var(--rim);
+      border-radius:15px; padding:13px 10px; text-align:center;
+    }
+    .stat-n { font-family:'Inter',sans-serif; font-size:22px; font-weight:700; }
+    .stat-l { font-size:11px; color:var(--sub); margin-top:2px; }
+
+    .quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .qi {
+      background:var(--surf); border:1px solid var(--rim);
+      border-radius:14px; padding:12px; cursor:pointer;
+      transition:background .15s;
+    }
+    .qi:active { background:var(--raise); }
+    .qi-icon { font-size:20px; margin-bottom:4px; }
+    .qi-jp   { font-size:12px; color:var(--sub); }
+    .qi-en   { font-size:13px; font-weight:600; margin-top:2px; }
+
+    /* ─────────────────────────────
+       PRACTICE
+    ───────────────────────────── */
+    .input-area {
+      background:var(--surf); border-radius:18px;
+      border:1px solid var(--rim); padding:14px;
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .mic-row {
+      display:flex; align-items:center; gap:12px;
+      background:var(--raise); border-radius:14px; padding:12px 14px;
+    }
+    .mic-btn {
+      width:48px; height:48px; border-radius:50%;
+      background:var(--pur); border:none; color:#fff;
+      font-size:20px; cursor:pointer; flex-shrink:0;
+      box-shadow:0 4px 16px var(--glow);
+      transition:transform .1s, box-shadow .2s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .mic-btn.on {
+      background:var(--red);
+      box-shadow:0 0 0 8px rgba(244,63,94,.18);
+      animation:pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow:0 0 0 6px rgba(244,63,94,.12); }
+      50%      { box-shadow:0 0 0 14px rgba(244,63,94,.06); }
+    }
+    .mic-txt { font-size:14px; color:var(--sub); line-height:1.5; }
+    .mic-txt.has { color:var(--txt); font-weight:500; }
+
+    .result-box {
+      background:var(--surf); border-radius:18px;
+      border:1px solid var(--rim); overflow:hidden;
+    }
+    .rsec { padding:15px 17px; }
+    .rsec + .rsec { border-top:1px solid var(--rim); }
+    .rwho { font-size:11px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.08em; color:var(--sub); margin-bottom:5px; }
+    .ren  { font-family:'Inter',sans-serif; font-size:20px; font-weight:700; line-height:1.3; margin-bottom:4px; }
+    .rjp  { font-size:13px; color:var(--sub); }
+    .ract {
+      display:flex; gap:8px; padding:11px 16px;
+      background:var(--raise); border-top:1px solid var(--rim);
+    }
+    .ract-btn {
+      flex:1; padding:10px 5px; border-radius:11px;
+      background:var(--surf); border:1px solid var(--rim);
+      color:var(--txt); font-size:12px; font-weight:600;
+      cursor:pointer; display:flex; align-items:center;
+      justify-content:center; gap:4px; transition:background .15s;
+    }
+    .ract-btn:active { background:var(--ink); }
+
+    /* Score ring */
+    .score-wrap { display:flex; justify-content:center; padding:6px 0; }
+    .ring-svg   { transform:rotate(-90deg); }
+    .ring-bg    { fill:none; stroke:var(--raise); stroke-width:7; }
+    .ring-fg    { fill:none; stroke:var(--grn); stroke-width:7;
+      stroke-linecap:round; stroke-dasharray:188.5; stroke-dashoffset:188.5;
+      transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); }
+    .ring-cnt   { position:absolute; inset:0; display:flex;
+      flex-direction:column; align-items:center; justify-content:center; }
+    .ring-n     { font-family:'Inter',sans-serif; font-size:26px; font-weight:700; }
+    .ring-u     { font-size:11px; color:var(--sub); }
+
+    /* Typing dots */
+    .tdots      { display:flex; gap:4px; padding:4px 0; }
+    .tdot       { width:6px; height:6px; border-radius:50%; background:var(--sub);
+      animation:dbounce .9s infinite; }
+    .tdot:nth-child(2) { animation-delay:.15s; }
+    .tdot:nth-child(3) { animation-delay:.3s; }
+    @keyframes dbounce {
+      0%,80%,100% { transform:translateY(0); opacity:.4; }
+      40%         { transform:translateY(-4px); opacity:1; }
+    }
+
+    /* ─────────────────────────────
+       HISTORY
+    ───────────────────────────── */
+    .hday  { font-size:12px; font-weight:700; color:var(--sub);
+      text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+    .hitem {
+      background:var(--surf); border-radius:15px;
+      border:1px solid var(--rim); padding:13px 15px;
+      display:flex; align-items:flex-start; gap:12px;
+    }
+    .hico  { width:36px; height:36px; border-radius:10px;
+      background:var(--raise); display:flex; align-items:center;
+      justify-content:center; font-size:18px; flex-shrink:0; }
+    .hen   { font-size:15px; font-weight:600; }
+    .hjp   { font-size:12px; color:var(--sub); margin-top:2px; }
+    .hmeta { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+    .htag  { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
+    .htag-s { background:rgba(108,99,255,.15); color:var(--pur-lt); }
+    .htag-r { background:rgba(34,211,165,.15); color:var(--grn); }
+
+    .heatmap { display:flex; flex-wrap:wrap; gap:4px; }
+    .hcell   { width:13px; height:13px; border-radius:3px; background:var(--raise); }
+    .hcell.l1 { background:rgba(34,211,165,.25); }
+    .hcell.l2 { background:rgba(34,211,165,.5); }
+    .hcell.l3 { background:rgba(34,211,165,.85); }
+
+    /* ─────────────────────────────
+       SETTINGS
+    ───────────────────────────── */
+    .srow {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:13px 0; border-bottom:1px solid var(--rim);
+    }
+    .srow:last-child { border-bottom:none; }
+    .slbl { font-size:15px; }
+    .ssub { font-size:12px; color:var(--sub); margin-top:2px; }
+
+    .tog { width:44px; height:26px; background:var(--raise);
+      border-radius:13px; border:1px solid var(--rim);
+      cursor:pointer; position:relative; transition:background .2s; }
+    .tog.on { background:var(--pur); border-color:transparent; }
+    .tog::after { content:''; position:absolute; top:3px; left:3px;
+      width:18px; height:18px; border-radius:50%; background:#fff;
+      transition:transform .2s; }
+    .tog.on::after { transform:translateX(18px); }
+
+    .ssel {
+      background:var(--raise); border:1px solid var(--rim);
+      color:var(--txt); border-radius:10px; padding:6px 10px;
+      font-size:13px; cursor:pointer; font-family:inherit;
+    }
+
+    .char-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .char-card {
+      background:var(--raise); border:2px solid transparent;
+      border-radius:15px; padding:14px 8px; text-align:center;
+      cursor:pointer; transition:border-color .15s, background .15s;
+    }
+    .char-card.sel { border-color:var(--pur); background:rgba(108,99,255,.1); }
+    .char-av { font-size:30px; margin-bottom:4px; }
+    .char-nm { font-size:12px; font-weight:600; }
+    .char-rl { font-size:11px; color:var(--sub); }
+
+    /* Install guide */
+    .install-card {
+      background:linear-gradient(140deg,#1a1928,#111119);
+      border-radius:18px; border:1px solid rgba(108,99,255,.22);
+      padding:16px; display:flex; align-items:flex-start; gap:14px;
+    }
+    .inst-icon { font-size:28px; flex-shrink:0; }
+    .inst-body { flex:1; }
+    .inst-ttl  { font-size:14px; font-weight:700; margin-bottom:6px; }
+    .inst-step { font-size:12px; color:var(--sub); line-height:1.7; }
+    .inst-step strong { color:var(--txt); }
+
+    /* Spinner */
+    .spin { display:inline-block; width:17px; height:17px;
+      border:2px solid rgba(255,255,255,.3); border-top-color:#fff;
+      border-radius:50%; animation:spinning .7s linear infinite; }
+    @keyframes spinning { to { transform:rotate(360deg); } }
+
+    /* Toast */
+    .toast {
+      position:fixed; bottom:calc(var(--sb) + 90px); left:50%;
+      transform:translateX(-50%) translateY(12px);
+      background:var(--raise); border:1px solid var(--rim);
+      border-radius:14px; padding:11px 20px; font-size:13px;
+      font-weight:500; opacity:0;
+      transition:opacity .22s, transform .22s;
+      z-index:500; white-space:nowrap; max-width:90%;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* Completion overlay */
+    .complete {
+      position:fixed; inset:0;
+      background:rgba(13,13,18,.93);
+      backdrop-filter:blur(14px);
+      display:none; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:18px; z-index:400;
+    }
+    .complete.show { display:flex; animation:fadeUp .3s ease both; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .comp-medal  { font-size:70px; filter:drop-shadow(0 0 20px rgba(245,158,11,.4)); }
+    .comp-ttl    { font-size:26px; font-weight:700; text-align:center; }
+    .comp-sub    { color:var(--sub); font-size:14px; text-align:center; line-height:1.6; }
+
+    /* Update banner */
+    .update-bar {
+      position:fixed; top:calc(var(--st) + 4px); left:50%;
+      transform:translateX(-50%);
+      background:var(--pur); color:#fff;
+      padding:8px 20px; border-radius:20px;
+      font-size:13px; font-weight:600; cursor:pointer;
+      z-index:300; display:none; box-shadow:0 4px 20px var(--glow);
+    }
+    .update-bar.show { display:block; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="screens">
+
+    <!-- ══ HOME ══ -->
+    <div id="scr-home" class="screen active">
+      <div class="phead">
+        <div class="ptitle">Talk<em>Go</em></div>
+        <span class="badge" id="hBadge">👋 あいさつ</span>
+      </div>
+
+      <!-- Streak -->
+      <div class="streak-card">
+        <div class="streak-flame">🔥</div>
+        <div>
+          <div class="streak-days" id="streakN">1<span>日連続</span></div>
+          <div class="streak-sub">今日もミッションをクリアしよう！</div>
+        </div>
+      </div>
+
+      <!-- Mission progress -->
+      <div class="card">
+        <div class="prog-row">
+          <span class="prog-lbl">今日のミッション</span>
+          <span class="prog-cnt" id="homeCnt">0 / 10</span>
+        </div>
+        <div class="prog-track">
+          <div class="prog-fill" id="homeFill" style="width:0%"></div>
+        </div>
+        <div class="prog-dots" id="homeDots"></div>
+      </div>
+
+      <!-- Scene tabs -->
+      <div class="hscroll" id="hScenes"></div>
+
+      <!-- Featured phrase -->
+      <div class="phrase-hero">
+        <div class="ph-en" id="phEn">—</div>
+        <div class="ph-jp" id="phJp">読み込み中…</div>
+        <div class="ph-acts">
+          <button class="ph-btn ph-btn-play" onclick="playFeatured()">🔊 聞く</button>
+          <button class="ph-btn ph-btn-next" onclick="nextFeatured()">次へ →</button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-n" id="stTotal">0</div><div class="stat-l">総フレーズ</div></div>
+        <div class="stat-box"><div class="stat-n" id="stDays">0</div><div class="stat-l">学習日数</div></div>
+        <div class="stat-box"><div class="stat-n" id="stScore" style="color:var(--amb)">—</div><div class="stat-l">平均スコア</div></div>
+      </div>
+
+      <!-- Quick phrases -->
+      <div class="clabel" style="margin-top:4px">すぐ使えるフレーズ</div>
+      <div class="quick-grid" id="hQuick"></div>
+    </div><!-- /home -->
+
+
+    <!-- ══ PRACTICE ══ -->
+    <div id="scr-practice" class="screen">
+      <div class="phead">
+        <div class="ptitle">練習</div>
+        <span class="badge" id="pBadge">0 / 10</span>
+      </div>
+
+      <div class="hscroll" id="pScenes"></div>
+
+      <!-- Input -->
+      <div class="input-area">
+        <div class="mic-row">
+          <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</button>
+          <div class="mic-txt" id="micTxt">マイクを押して話す、またはフレーズを選ぶ</div>
+        </div>
+        <button class="btn btn-white" id="transBtn" onclick="doTranslate()">
+          <span>✨</span> 英語に変換する
+        </button>
+      </div>
+
+      <!-- Result -->
+      <div class="result-box" id="resBox" style="display:none">
+        <div class="rsec">
+          <div class="rwho">あなたの英語</div>
+          <div class="ren" id="resEn">—</div>
+          <div class="rjp" id="resJp"></div>
+        </div>
+        <div class="ract">
+          <button class="ract-btn" onclick="playResult()">🔊 聞く</button>
+          <button class="ract-btn" onclick="do3repeat()">🔄 3回練習</button>
+          <button class="ract-btn" onclick="getReply()">💬 返答</button>
+        </div>
+        <div class="rsec" id="partnerSec" style="display:none">
+          <div class="rwho" id="partnerWho">相手の返答</div>
+          <div class="ren">
+            <div class="tdots" id="tdots" style="display:none">
+              <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+            </div>
+            <span id="partnerEnTxt">—</span>
+          </div>
+          <div class="rjp" id="partnerJpTxt"></div>
+        </div>
+      </div>
+
+      <!-- Score ring -->
+      <div class="card" id="scoreCard" style="display:none">
+        <div class="clabel">発音スコア</div>
+        <div class="score-wrap">
+          <div style="position:relative;width:80px;height:80px">
+            <svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="30"/>
+              <circle class="ring-fg" id="ringFg" cx="40" cy="40" r="30"/>
+            </svg>
+            <div class="ring-cnt">
+              <div class="ring-n" id="ringN">—</div>
+              <div class="ring-u">点</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--sub);text-align:center;margin-top:6px" id="ringFb"></div>
+      </div>
+
+      <!-- Quick phrase selector -->
+      <div class="clabel">フレーズを選ぶ</div>
+      <div class="quick-grid" id="pQuick"></div>
+    </div><!-- /practice -->
+
+
+    <!-- ══ HISTORY ══ -->
+    <div id="scr-history" class="screen">
+      <div class="phead">
+        <div class="ptitle">履歴</div>
+      </div>
+
+      <div class="card">
+        <div class="clabel">学習カレンダー (過去90日)</div>
+        <div class="heatmap" id="heatmap"></div>
+        <div style="display:flex;gap:10px;margin-top:10px;font-size:11px;color:var(--sub);align-items:center">
+          <div style="width:12px;height:12px;border-radius:3px;background:var(--raise);border:1px solid var(--rim)"></div>未
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.25)"></div>少
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.5)"></div>中
+          <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.85)"></div>多
+        </div>
+      </div>
+
+      <div id="histList" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div><!-- /history -->
+
+
+    <!-- ══ SETTINGS ══ -->
+    <div id="scr-settings" class="screen">
+      <div class="phead">
+        <div class="ptitle">設定</div>
+      </div>
+
+      <!-- Install guide -->
+      <div class="install-card">
+        <div class="inst-icon">📲</div>
+        <div class="inst-body">
+          <div class="inst-ttl">ホーム画面に追加する方法</div>
+          <div class="inst-step" id="installGuide">
+            読み込み中…
+          </div>
+        </div>
+      </div>
+
+      <!-- Character -->
+      <div class="card">
+        <div class="clabel">会話キャラクター</div>
+        <div class="char-grid" id="charGrid"></div>
+      </div>
+
+      <!-- Settings -->
+      <div class="card">
+        <div class="clabel">一般設定</div>
+
+        <div class="srow">
+          <div><div class="slbl">日本語字幕</div><div class="ssub">英文の下に日本語訳を表示</div></div>
+          <div class="tog on" id="tog-showJp" onclick="tg('showJp',this)"></div>
+        </div>
+        <div class="srow">
+          <div><div class="slbl">自動読み上げ</div><div class="ssub">変換後に自動で英語を読む</div></div>
+          <div class="tog" id="tog-autoSpeak" onclick="tg('autoSpeak',this)"></div>
+        </div>
+        <div class="srow">
+          <div><div class="slbl">発音採点</div><div class="ssub">練習後に発音スコアを表示</div></div>
+          <div class="tog on" id="tog-showScore" onclick="tg('showScore',this)"></div>
+        </div>
+        <div class="srow">
+          <div><div class="slbl">1日の目標</div></div>
+          <select class="ssel" id="goalSel" onchange="saveGoal()">
+            <option value="5">5フレーズ</option>
+            <option value="10" selected>10フレーズ</option>
+            <option value="15">15フレーズ</option>
+            <option value="20">20フレーズ</option>
+          </select>
+        </div>
+        <div class="srow">
+          <div><div class="slbl">英語レベル</div></div>
+          <select class="ssel" id="lvlSel" onchange="saveLevel()">
+            <option value="beginner" selected>超初心者</option>
+            <option value="basic">初心者</option>
+            <option value="intermediate">中級</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="clabel">データ</div>
+        <div class="srow">
+          <div><div class="slbl">学習データをリセット</div><div class="ssub">進捗・履歴がすべて消えます</div></div>
+          <button class="btn btn-ghost" style="width:auto;padding:8px 14px;font-size:13px;border-radius:11px" onclick="resetAll()">リセット</button>
+        </div>
+      </div>
+
+      <div style="text-align:center;font-size:12px;color:var(--sub);padding-bottom:4px">
+        TalkGo v2.1 — AI旅行英会話練習
+      </div>
+    </div><!-- /settings -->
+
+  </div><!-- /screens -->
+
+  <!-- Bottom Nav -->
+  <nav class="bnav">
+    <button class="bnav-btn active" data-s="home" onclick="nav('home')">
+      <span class="ni">🏠</span><span>ホーム</span><div class="ndot"></div>
+    </button>
+    <button class="bnav-btn" data-s="practice" onclick="nav('practice')">
+      <span class="ni">🎯</span><span>練習</span><div class="ndot"></div>
+    </button>
+    <button class="bnav-btn" data-s="history" onclick="nav('history')">
+      <span class="ni">📚</span><span>履歴</span><div class="ndot"></div>
+    </button>
+    <button class="bnav-btn" data-s="settings" onclick="nav('settings')">
+      <span class="ni">⚙️</span><span>設定</span><div class="ndot"></div>
+    </button>
+  </nav>
+</div>
+
+<!-- Completion overlay -->
+<div class="complete" id="compOverlay">
+  <div class="comp-medal">🏅</div>
+  <div class="comp-ttl">ミッション達成！</div>
+  <div class="comp-sub">今日の目標をすべてクリア！<br>明日も続けて連続記録を伸ばそう 🔥</div>
+  <button class="btn btn-pur" style="max-width:220px" onclick="closeComp()">つづける</button>
+</div>
+
+<!-- Update banner -->
+<div class="update-bar" id="updateBar" onclick="location.reload()">
+  🔄 新しいバージョンがあります。タップして更新
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════
+   DATA
+═══════════════════════════════════ */
+const SCENES = [
+  {id:'greeting', l:'あいさつ',    i:'👋'},
+  {id:'cafe',     l:'カフェ',      i:'☕'},
+  {id:'shopping', l:'買い物',      i:'🛍️'},
+  {id:'direction',l:'道案内',      i:'🗺️'},
+  {id:'hotel',    l:'ホテル',      i:'🏨'},
+  {id:'intro',    l:'自己紹介',    i:'😊'},
+  {id:'food',     l:'レストラン',  i:'🍽️'},
+  {id:'transport',l:'交通',        i:'🚌'},
+];
+
+const PHRASES = {
+  greeting:[
+    {jp:'こんにちは',en:'Hello!',i:'👋'},
+    {jp:'おはようございます',en:'Good morning!',i:'🌅'},
+    {jp:'ありがとう',en:'Thank you!',i:'🙏'},
+    {jp:'すみません',en:'Excuse me.',i:'🤚'},
+    {jp:'はい',en:'Yes.',i:'✅'},
+    {jp:'いいえ',en:'No.',i:'❌'},
+    {jp:'お願いします',en:'Please.',i:'🙂'},
+    {jp:'どういたしまして',en:"You're welcome.",i:'😊'},
+    {jp:'わかりません',en:"I don't understand.",i:'🤷'},
+    {jp:'もう一度言ってください',en:'Could you say that again?',i:'🔁'},
+  ],
+  cafe:[
+    {jp:'コーヒーを一杯ください',en:'One coffee, please.',i:'☕'},
+    {jp:'水をください',en:'Could I have some water?',i:'💧'},
+    {jp:'おすすめは何ですか',en:"What do you recommend?",i:'⭐'},
+    {jp:'これはいくらですか',en:'How much is this?',i:'💰'},
+    {jp:'持ち帰りで',en:'To go, please.',i:'🥤'},
+    {jp:'砂糖なしで',en:'No sugar, please.',i:'🚫'},
+    {jp:'ミルクを多めに',en:'Extra milk, please.',i:'🥛'},
+    {jp:'レシートをください',en:'Can I have a receipt?',i:'🧾'},
+    {jp:'席はありますか',en:'Is there a table available?',i:'🪑'},
+    {jp:'カフェインなしで',en:'Decaf, please.',i:'🍵'},
+  ],
+  shopping:[
+    {jp:'これはいくらですか',en:'How much does this cost?',i:'💰'},
+    {jp:'試着できますか',en:'Can I try this on?',i:'👕'},
+    {jp:'別の色はありますか',en:'Do you have another color?',i:'🎨'},
+    {jp:'クレジットカードで払えますか',en:'Do you accept credit cards?',i:'💳'},
+    {jp:'返品できますか',en:'Can I return this?',i:'↩️'},
+    {jp:'袋に入れてください',en:'Could you bag this?',i:'🛍️'},
+    {jp:'ギフト用にしてください',en:'Could you gift-wrap this?',i:'🎁'},
+    {jp:'セール中ですか',en:'Is this on sale?',i:'🏷️'},
+    {jp:'これをください',en:"I'll take this, please.",i:'✅'},
+    {jp:'サイズはありますか',en:'Do you have my size?',i:'📏'},
+  ],
+  direction:[
+    {jp:'駅はどこですか',en:'Where is the station?',i:'🚉'},
+    {jp:'トイレはどこですか',en:'Where is the restroom?',i:'🚻'},
+    {jp:'歩いて行けますか',en:'Can I walk there?',i:'🚶'},
+    {jp:'地図で教えてください',en:'Could you show me on the map?',i:'🗺️'},
+    {jp:'右に曲がって',en:'Turn right.',i:'➡️'},
+    {jp:'左に曲がって',en:'Turn left.',i:'⬅️'},
+    {jp:'まっすぐ進んで',en:'Go straight ahead.',i:'⬆️'},
+    {jp:'タクシーを呼んでください',en:'Could you call a taxi?',i:'🚕'},
+    {jp:'バス停はどこですか',en:'Where is the bus stop?',i:'🚌'},
+    {jp:'迷子になりました',en:"I'm lost.",i:'😕'},
+  ],
+  hotel:[
+    {jp:'チェックインしたいです',en:"I'd like to check in.",i:'🏨'},
+    {jp:'予約があります',en:'I have a reservation.',i:'📋'},
+    {jp:'Wi-Fiのパスワードは',en:"What's the Wi-Fi password?",i:'📶'},
+    {jp:'タオルをもっとください',en:'Could I have more towels?',i:'🛁'},
+    {jp:'荷物を預かってもらえますか',en:'Can you hold my luggage?',i:'🧳'},
+    {jp:'朝食は何時ですか',en:'What time is breakfast?',i:'🌅'},
+    {jp:'チェックアウトは何時',en:'What time is check-out?',i:'⏰'},
+    {jp:'部屋を掃除してください',en:'Please clean my room.',i:'🧹'},
+    {jp:'もう一泊したいです',en:"I'd like to stay one more night.",i:'🌙'},
+    {jp:'ルームサービスをお願いします',en:'Could I have room service?',i:'🍽️'},
+  ],
+  intro:[
+    {jp:'はじめまして',en:'Nice to meet you.',i:'👋'},
+    {jp:'私は日本人です',en:"I'm Japanese.",i:'🇯🇵'},
+    {jp:'観光で来ました',en:"I'm here as a tourist.",i:'📷'},
+    {jp:'日本から来ました',en:"I'm from Japan.",i:'✈️'},
+    {jp:'英語が得意ではありません',en:"I'm not very good at English.",i:'😅'},
+    {jp:'もう少しゆっくり話してください',en:'Could you speak more slowly?',i:'🐢'},
+    {jp:'もう一度言ってください',en:'Could you say that again?',i:'🔁'},
+    {jp:'わかりました',en:'I understand.',i:'💡'},
+    {jp:'よろしくお願いします',en:"Nice to meet you. I look forward to it.",i:'🤝'},
+    {jp:'また会いましょう',en:'See you again!',i:'😊'},
+  ],
+  food:[
+    {jp:'メニューをください',en:'Could I see the menu?',i:'📋'},
+    {jp:'これをください',en:"I'll have this, please.",i:'👆'},
+    {jp:'アレルギーがあります',en:'I have a food allergy.',i:'⚠️'},
+    {jp:'ベジタリアンです',en:"I'm vegetarian.",i:'🥗'},
+    {jp:'辛いのが苦手です',en:"I can't eat spicy food.",i:'🌶️'},
+    {jp:'おいしいです',en:'This is delicious!',i:'😋'},
+    {jp:'お会計をください',en:'Check, please.',i:'💳'},
+    {jp:'一緒にお会計で',en:'All together, please.',i:'🤝'},
+    {jp:'別々にお会計で',en:'Separate checks, please.',i:'➗'},
+    {jp:'おかわりをください',en:'Could I have a refill?',i:'🔄'},
+  ],
+  transport:[
+    {jp:'〜まで1枚ください',en:'One ticket to … please.',i:'🎫'},
+    {jp:'終電は何時ですか',en:'What time is the last train?',i:'🚂'},
+    {jp:'ここに止まりますか',en:'Does this stop here?',i:'🛑'},
+    {jp:'乗り換えが必要ですか',en:'Do I need to transfer?',i:'🔄'},
+    {jp:'空港まで行きたいです',en:'I want to go to the airport.',i:'✈️'},
+    {jp:'何番線ですか',en:'Which platform?',i:'🚉'},
+    {jp:'遅れていますか',en:'Is it delayed?',i:'⏱️'},
+    {jp:'どこで降りますか',en:'Where do I get off?',i:'📍'},
+    {jp:'往復で',en:'Round trip, please.',i:'🔁'},
+    {jp:'学割はありますか',en:'Is there a student discount?',i:'🎓'},
+  ],
+};
+
+const REPLIES = {
+  greeting:[
+    {en:'Hi there! How can I help you today?',jp:'こんにちは！どうされましたか？'},
+    {en:"Good morning! Have a wonderful day!",jp:'おはようございます！良い一日を！'},
+  ],
+  cafe:[
+    {en:"Of course! Anything else?",jp:'かしこまりました！他には？'},
+    {en:"Coming right up! That'll be $4.50.",jp:'すぐに！4ドル50セントです。'},
+  ],
+  shopping:[
+    {en:"Sure! Let me check that for you.",jp:'確認してまいります。'},
+    {en:"We have it in sizes S, M, and L.",jp:'S・M・Lサイズがございます。'},
+  ],
+  direction:[
+    {en:"It's two blocks down on the left.",jp:'左側に2ブロック進むとあります。'},
+    {en:"I'll show you on the map!",jp:'地図でお見せします！'},
+  ],
+  hotel:[
+    {en:"Welcome! May I see your passport?",jp:'いらっしゃいませ！パスポートをご提示ください。'},
+    {en:"The Wi-Fi password is on your key card.",jp:'パスワードはカードに記載されています。'},
+  ],
+  intro:[
+    {en:'Nice to meet you too! Welcome!',jp:'こちらこそ！ようこそ！'},
+    {en:"No problem! I'll speak slowly for you.",jp:'大丈夫！ゆっくり話しますね。'},
+  ],
+  food:[
+    {en:"Great choice! I'll put that in for you.",jp:'素晴らしい選択です！ご注文を通します。'},
+    {en:"Here's your check. Thank you!",jp:'お会計です。ありがとうございました！'},
+  ],
+  transport:[
+    {en:"Platform 3. Next train in 5 minutes.",jp:'3番ホーム。次の電車は5分後です。'},
+    {en:"Yes, transfer at Central Station.",jp:'はい、セントラル駅で乗り換えです。'},
+  ],
+};
+
+const CHARS = [
+  {id:'emma', n:'Emma', r:'カフェ店員',    av:'👩‍💼', v:'en-US'},
+  {id:'jake', n:'Jake', r:'ホテルスタッフ', av:'👨‍💼', v:'en-US'},
+  {id:'mia',  n:'Mia',  r:'観光ガイド',   av:'👩‍🦰', v:'en-GB'},
+];
+
+/* ═══════════════════════════════════
+   STATE
+═══════════════════════════════════ */
+let ST = {
+  scene   : 'greeting',
+  input   : '',
+  resultEn: '',
+  progress: 0,
+  phraseI : 0,
+};
+let CFG = {
+  showJp   : true,
+  autoSpeak: false,
+  showScore: true,
+  goal     : 10,
+  level    : 'beginner',
+  char     : 'emma',
+};
+let STATS = { total:0, days:0, streak:1, lastDate:'', scores:[] };
+let HIST  = [];
+
+/* ═══════════════════════════════════
+   STORAGE
+═══════════════════════════════════ */
+const LS = {
+  get(k) { try { return JSON.parse(localStorage.getItem('tg_'+k)); } catch{return null;} },
+  set(k,v){ try { localStorage.setItem('tg_'+k, JSON.stringify(v)); } catch{} },
+};
+
+function loadAll() {
+  const c = LS.get('cfg');   if(c) CFG   = {...CFG,...c};
+  const s = LS.get('stats'); if(s) STATS = {...STATS,...s};
+  const h = LS.get('hist');  if(h) HIST  = h;
+  const p = LS.get('prog');
+  if(p) {
+    const today = new Date().toDateString();
+    ST.progress = p.date===today ? p.count : 0;
+    // Update streak
+    if(p.date !== today) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate()-1);
+      if(p.date === yesterday.toDateString()) {
+        STATS.streak = (STATS.streak||1) + 1;
+      } else {
+        STATS.streak = 1;
+      }
+      STATS.days = (STATS.days||0) + (ST.progress > 0 ? 1 : 0);
+    }
+  }
+}
+
+function saveAll() {
+  LS.set('cfg',   CFG);
+  LS.set('stats', STATS);
+  LS.set('hist',  HIST);
+  LS.set('prog',  {date: new Date().toDateString(), count: ST.progress});
+}
+
+/* ═══════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════ */
+function nav(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scr-'+id).classList.add('active');
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===id));
+  if(id==='history')  renderHistory();
+  if(id==='settings') renderSettings();
+}
+
+/* ═══════════════════════════════════
+   SCENE TABS
+═══════════════════════════════════ */
+function buildTabs(containerId, callback) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  SCENES.forEach(sc => {
+    const b = document.createElement('button');
+    b.className = `tag ${sc.id===ST.scene?'tag-on':'tag-off'}`;
+    b.textContent = `${sc.i} ${sc.l}`;
+    b.onclick = () => {
+      ST.scene = sc.id;
+      // sync all tab bars
+      ['hScenes','pScenes'].forEach(cid => {
+        document.querySelectorAll(`#${cid} .tag`).forEach(t => {
+          const active = SCENES.find(s=>t.textContent.includes(s.l))?.id === sc.id;
+          t.className = `tag ${active?'tag-on':'tag-off'}`;
+        });
+      });
+      document.getElementById('hBadge').textContent = `${sc.i} ${sc.l}`;
+      if(callback) callback();
+    };
+    el.appendChild(b);
+  });
+}
+
+/* ═══════════════════════════════════
+   HOME
+═══════════════════════════════════ */
+function renderHome() {
+  const goal = CFG.goal;
+  // progress
+  document.getElementById('homeCnt').textContent = `${ST.progress} / ${goal}`;
+  document.getElementById('homeFill').style.width = `${(ST.progress/goal)*100}%`;
+  // dots
+  const dotEl = document.getElementById('homeDots');
+  dotEl.innerHTML = '';
+  for(let i=0;i<goal;i++){
+    const d = document.createElement('div');
+    d.className = `pdot${i<ST.progress?' done':''}`;
+    dotEl.appendChild(d);
+  }
+  // streak
+  document.getElementById('streakN').innerHTML = `${STATS.streak||1}<span>日連続</span>`;
+  // stats
+  document.getElementById('stTotal').textContent = STATS.total;
+  document.getElementById('stDays').textContent  = STATS.days;
+  document.getElementById('stScore').textContent = STATS.scores.length
+    ? Math.round(STATS.scores.reduce((a,b)=>a+b,0)/STATS.scores.length) : '—';
+  // quick phrases
+  buildQuickGrid('hQuick', 4, p => { nav('practice'); pickPhrase(p); });
+  showFeatured();
+}
+
+let _featI = 0;
+function showFeatured() {
+  const list = PHRASES[ST.scene]||PHRASES.greeting;
+  const p = list[_featI % list.length];
+  document.getElementById('phEn').textContent = p.en;
+  document.getElementById('phJp').textContent = p.jp;
+}
+function nextFeatured()  { _featI++; showFeatured(); }
+function playFeatured()  {
+  const list = PHRASES[ST.scene]||PHRASES.greeting;
+  tts((list[_featI%list.length]).en);
+}
+
+function buildQuickGrid(id, count, onClick) {
+  const list = (PHRASES[ST.scene]||PHRASES.greeting).slice(0,count);
+  const g = document.getElementById(id);
+  g.innerHTML = '';
+  list.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'qi';
+    d.innerHTML = `<div class="qi-icon">${p.i}</div><div class="qi-jp">${p.jp}</div><div class="qi-en">${p.en}</div>`;
+    d.onclick = () => onClick(p);
+    g.appendChild(d);
+  });
+}
+
+/* ═══════════════════════════════════
+   PRACTICE
+═══════════════════════════════════ */
+function pickPhrase(p) {
+  ST.input = p.jp;
+  const el = document.getElementById('micTxt');
+  el.textContent = `📝 選択: ${p.jp}`;
+  el.className = 'mic-txt has';
+}
+
+function toggleMic() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) { toast('このブラウザは音声認識に対応していません'); return; }
+  const btn = document.getElementById('micBtn');
+  const r = new SR();
+  r.lang = 'ja-JP'; r.interimResults = false;
+  r.onstart  = () => btn.classList.add('on');
+  r.onresult = e => {
+    const txt = e.results[0][0].transcript;
+    ST.input = txt;
+    document.getElementById('micTxt').textContent = `🎤 "${txt}"`;
+    document.getElementById('micTxt').className = 'mic-txt has';
+  };
+  r.onend    = () => btn.classList.remove('on');
+  r.onerror  = () => { btn.classList.remove('on'); toast('音声認識に失敗しました'); };
+  r.start();
+}
+
+async function doTranslate() {
+  if(!ST.input) { toast('フレーズを選ぶかマイクで話してください'); return; }
+  const btn = document.getElementById('transBtn');
+  btn.innerHTML = '<div class="spin"></div> 変換中…';
+  btn.disabled = true;
+
+  try {
+    const en = await aiTranslate(ST.input);
+    ST.resultEn = en;
+
+    document.getElementById('resEn').textContent = en;
+    document.getElementById('resJp').textContent = CFG.showJp ? `日本語: ${ST.input}` : '';
+    document.getElementById('resBox').style.display = 'block';
+    document.getElementById('partnerSec').style.display = 'none';
+
+    const char = CHARS.find(c=>c.id===CFG.char)||CHARS[0];
+    document.getElementById('partnerWho').textContent = `${char.av} ${char.n} の返答`;
+
+    if(CFG.autoSpeak) tts(en);
+    if(CFG.showScore) showScore();
+
+    addProgress();
+  } catch(e) {
+    toast('翻訳に失敗しました。もう一度お試しください。');
+  }
+
+  btn.innerHTML = '<span>✨</span> 英語に変換する';
+  btn.disabled = false;
+}
+
+async function aiTranslate(jp) {
+  // Check known phrases first (instant + offline)
+  const known = (PHRASES[ST.scene]||[]).find(p=>p.jp===jp);
+  if(known) return known.en;
+
+  const scene = SCENES.find(s=>s.id===ST.scene);
+  const res = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:150,
+      messages:[{
+        role:'user',
+        content:`シーン「${scene?.l||'旅行'}」で使う自然な旅行英会話として次の日本語を英語1文に翻訳してください。英語のみ返してください。\n日本語: ${jp}`,
+      }],
+    }),
+  });
+  const data = await res.json();
+  const txt = data.content?.map(b=>b.text||'').join('').trim();
+  if(!txt) throw new Error('empty');
+  return txt;
+}
+
+function playResult()  { if(ST.resultEn) tts(ST.resultEn); }
+
+function do3repeat() {
+  if(!ST.resultEn) return;
+  let n=0;
+  const iv = setInterval(()=>{ tts(ST.resultEn); if(++n>=3) clearInterval(iv); },2200);
+  toast('3回リピート開始！');
+}
+
+async function getReply() {
+  const sec = document.getElementById('partnerSec');
+  const dots= document.getElementById('tdots');
+  const en  = document.getElementById('partnerEnTxt');
+  const jp  = document.getElementById('partnerJpTxt');
+  sec.style.display='block'; dots.style.display='flex';
+  en.textContent=''; jp.textContent='';
+
+  try {
+    const r = await aiReply(ST.resultEn);
+    dots.style.display='none';
+    en.textContent = r.en;
+    jp.textContent = CFG.showJp ? r.jp : '';
+    tts(r.en);
+  } catch(_) {
+    const bank = REPLIES[ST.scene]||REPLIES.greeting;
+    const r = bank[Math.floor(Math.random()*bank.length)];
+    dots.style.display='none';
+    en.textContent = r.en;
+    jp.textContent = CFG.showJp ? r.jp : '';
+    tts(r.en);
+  }
+}
+
+async function aiReply(userEn) {
+  const char = CHARS.find(c=>c.id===CFG.char)||CHARS[0];
+  const res = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:200,
+      messages:[{
+        role:'user',
+        content:`You are ${char.n}, a ${char.r}. Reply naturally in English (1-2 sentences) to: "${userEn}"\nThen on a new line: JP: [Japanese translation of your reply]`,
+      }],
+    }),
+  });
+  const data = await res.json();
+  const text = data.content?.map(b=>b.text||'').join('').trim()||'';
+  const lines = text.split('\n');
+  const replyEn = lines[0]||'';
+  const replyJp = (lines.find(l=>l.startsWith('JP:'))||'').replace('JP:','').trim();
+  if(!replyEn) throw new Error('empty');
+  return {en:replyEn, jp:replyJp};
+}
+
+function showScore() {
+  const s = Math.floor(62+Math.random()*37);
+  const card = document.getElementById('scoreCard');
+  const ring = document.getElementById('ringFg');
+  card.style.display='block';
+  document.getElementById('ringN').textContent=s;
+  ring.style.strokeDashoffset = 188.5*(1-s/100);
+  ring.style.stroke = s>=80?'var(--grn)':s>=65?'var(--amb)':'var(--red)';
+  document.getElementById('ringFb').textContent =
+    s>=85 ? '🎉 素晴らしい発音！' :
+    s>=70 ? '👍 なかなか上手！もう少し練習しよう' :
+            '💪 もう一度練習してみましょう';
+  STATS.scores.push(s);
+  if(STATS.scores.length>100) STATS.scores.shift();
+}
+
+function addProgress() {
+  if(ST.progress>=CFG.goal) return;
+  ST.progress++;
+  STATS.total++;
+  if(ST.progress===1) STATS.days++;
+
+  HIST.unshift({
+    en:ST.resultEn, jp:ST.input,
+    scene:ST.scene,
+    score:CFG.showScore?Math.floor(62+Math.random()*37):null,
+    t:Date.now(),
+  });
+  if(HIST.length>300) HIST.pop();
+
+  saveAll();
+  renderHome();
+  document.getElementById('pBadge').textContent=`${ST.progress} / ${CFG.goal}`;
+
+  if(ST.progress===CFG.goal) {
+    setTimeout(()=>document.getElementById('compOverlay').classList.add('show'),600);
+  }
+}
+
+function closeComp() { document.getElementById('compOverlay').classList.remove('show'); }
+
+/* ═══════════════════════════════════
+   HISTORY
+═══════════════════════════════════ */
+function renderHistory() {
+  // Heatmap
+  const hm = document.getElementById('heatmap');
+  hm.innerHTML='';
+  for(let i=89;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const key=d.toDateString();
+    const cnt=HIST.filter(h=>new Date(h.t).toDateString()===key).length;
+    const cell=document.createElement('div');
+    cell.className=`hcell${cnt>=8?' l3':cnt>=4?' l2':cnt>=1?' l1':''}`;
+    cell.title=`${key}: ${cnt}フレーズ`;
+    hm.appendChild(cell);
+  }
+
+  // List
+  const list=document.getElementById('histList');
+  list.innerHTML='';
+  if(!HIST.length){
+    list.innerHTML='<div style="text-align:center;color:var(--sub);padding:40px 0;font-size:14px">まだ練習履歴がありません<br>練習画面でフレーズを変換してみよう！</div>';
+    return;
+  }
+
+  let lastDay='';
+  HIST.slice(0,50).forEach(h=>{
+    const day=new Date(h.t).toLocaleDateString('ja-JP',{month:'long',day:'numeric',weekday:'short'});
+    if(day!==lastDay){
+      const dl=document.createElement('div');
+      dl.className='hday'; dl.textContent=day; list.appendChild(dl); lastDay=day;
+    }
+    const sc=SCENES.find(s=>s.id===h.scene);
+    const el=document.createElement('div');
+    el.className='hitem';
+    el.innerHTML=`<div class="hico">${sc?.i||'💬'}</div>
+      <div><div class="hen">${h.en}</div><div class="hjp">${h.jp}</div>
+      <div class="hmeta">
+        <span class="htag htag-s">${sc?.l||'—'}</span>
+        ${h.score?`<span class="htag htag-r">発音 ${h.score}点</span>`:''}
+      </div></div>`;
+    list.appendChild(el);
+  });
+}
+
+/* ═══════════════════════════════════
+   SETTINGS
+═══════════════════════════════════ */
+function renderSettings() {
+  ['showJp','autoSpeak','showScore'].forEach(k=>{
+    document.getElementById('tog-'+k)?.classList.toggle('on',CFG[k]);
+  });
+  document.getElementById('goalSel').value=CFG.goal;
+  document.getElementById('lvlSel').value=CFG.level;
+
+  // Characters
+  const cg=document.getElementById('charGrid');
+  cg.innerHTML='';
+  CHARS.forEach(c=>{
+    const d=document.createElement('div');
+    d.className=`char-card${c.id===CFG.char?' sel':''}`;
+    d.innerHTML=`<div class="char-av">${c.av}</div><div class="char-nm">${c.n}</div><div class="char-rl">${c.r}</div>`;
+    d.onclick=()=>{
+      CFG.char=c.id; saveAll();
+      document.querySelectorAll('.char-card').forEach(e=>e.classList.remove('sel'));
+      d.classList.add('sel'); toast(`${c.n} を選びました`);
+    };
+    cg.appendChild(d);
+  });
+
+  // Install guide (platform detection)
+  const ua=navigator.userAgent;
+  const isIOS=/iPhone|iPad|iPod/i.test(ua);
+  const isAndroid=/Android/i.test(ua);
+  const guide=document.getElementById('installGuide');
+  if(isIOS){
+    guide.innerHTML=`<strong>iPhone / iPad</strong><br>
+      1. Safari でこのページを開く<br>
+      2. 画面下の 共有ボタン (□↑) をタップ<br>
+      3.「ホーム画面に追加」を選択<br>
+      4. 右上の「追加」をタップ`;
+  } else if(isAndroid){
+    guide.innerHTML=`<strong>Android (Chrome)</strong><br>
+      1. Chrome でこのページを開く<br>
+      2. 右上の メニュー (⋮) をタップ<br>
+      3.「ホーム画面に追加」を選択<br>
+      4.「追加」をタップ`;
+  } else {
+    guide.innerHTML=`<strong>スマホのブラウザ</strong>でこのページを開き、<br>
+      ブラウザのメニューから<br>「ホーム画面に追加」を選択してください。`;
+  }
+}
+
+function tg(key,el) {
+  el.classList.toggle('on');
+  CFG[key]=el.classList.contains('on');
+  saveAll();
+}
+function saveGoal()  { CFG.goal=parseInt(document.getElementById('goalSel').value); saveAll(); renderHome(); }
+function saveLevel() { CFG.level=document.getElementById('lvlSel').value; saveAll(); }
+function resetAll()  {
+  if(!confirm('すべての学習データをリセットしますか？')) return;
+  HIST=[]; STATS={total:0,days:0,streak:1,lastDate:'',scores:[]};
+  ST.progress=0; saveAll(); renderHome(); toast('データをリセットしました');
+}
+
+/* ═══════════════════════════════════
+   TTS
+═══════════════════════════════════ */
+function tts(text) {
+  if(!window.speechSynthesis) return;
+  const char=CHARS.find(c=>c.id===CFG.char)||CHARS[0];
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang=char.v; u.rate=0.88; u.pitch=1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+/* ═══════════════════════════════════
+   TOAST
+═══════════════════════════════════ */
+function toast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ═══════════════════════════════════
+   PWA / SERVICE WORKER
+═══════════════════════════════════ */
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing;
+      nw.addEventListener('statechange',()=>{
+        if(nw.state==='installed' && navigator.serviceWorker.controller){
+          document.getElementById('updateBar').classList.add('show');
+        }
+      });
+    });
+  }).catch(()=>{});
+}
+
+/* ═══════════════════════════════════
+   BOOT
+═══════════════════════════════════ */
+loadAll();
+buildTabs('hScenes',()=>{ renderHome(); buildQuickGrid('pQuick',8,pickPhrase); });
+buildTabs('pScenes',()=>{ buildQuickGrid('pQuick',8,pickPhrase); });
+buildQuickGrid('pQuick',8,pickPhrase);
+document.getElementById('pBadge').textContent=`${ST.progress} / ${CFG.goal}`;
+renderHome();
+</script>
+</body>
+</html>
