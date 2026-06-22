@@ -3,1353 +3,1804 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>TalkGo</title>
-
-  <!-- PWA必須メタタグ -->
+  <title>TalkGo — 英会話練習</title>
+  <meta name="description" content="1日10フレーズで英会話を身につける旅行英会話PWAアプリ">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TalkGo">
   <meta name="theme-color" content="#0d0d12">
-  <meta name="description" content="1日10フレーズで英会話を身につける旅行英会話アプリ">
 
-  <!-- manifest & icons -->
-  <link rel="manifest" href="./manifest.json">
-  <link rel="apple-touch-icon" href="./icon-192.svg">
-  <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
+  <!-- PWA manifest (inline base64) -->
+  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiVGFsa0dvIOOCqOODs+S7o+S4iue1kCIsInNob3J0X25hbWUiOiJUYWxrR28iLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBkMGQxMiIsInRoZW1lX2NvbG9yIjoiIzBkMGQxMiIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUJrWldaaGJXbHVkRzV6UkhWeWJDOWpZV3d2Y0hOM1p5QjBaWGgwTFdGdVkyaHZjajQ4YzNabklIZHBaSFJvUFNJeE1EQWlJR2hsYVdkb2REMGlNVEF3SWlCbWFXeHNQU0lqTUdReU1EWXhJajQ4Wm1sc2JDQm1ZV3hwWkM5bVlXeHpaUzltYVd4c1BTSWpNakl4TkRFd0lpQm1kV3hzUFNJbllXeHZJaUJqZEhrdGNtVmhiR3g1UFNJbk1qSXhOREV3SWlBdlBqeHVaV1F1WVdOalpYTnpQakEwTWprd09UWXhMREF3TURBd01UWXdNREF3TURBME1qZ3lOakFzTURBd01EQXhNekE0TURBNE56SXdOekF3TjJZd01EMHdNREF3TUROaU1DQXdNREF3TURNME1pQXdNREF3TURBd01URXhJREF3TURBd01ETXpNaUF3TURBNE5qZ3dJREF3TURBd01Ea3lJREF3TURBd01EQTBPQ0F3TURBd05URTBJREEwTURBd01EQTBPamMwTURBd01EQTFOaUE0TURBNE16SXhJREV3TURBd01EQXdMVEV3TURBd01ERTJNVEZtTURBd01EQTBOeUE0TURZd01EQTBPREExTVRJd01UQXhOREV3T1RZeExEa3dOall3TkRnMUxEQXdNQzQ1TnpFMk5qRXlMREF3TURnd09EWXdORGd3TURBd0xEQXdNQ0F3TnpBMU56Z3dOemd3TURBd0xEQXdNQ0EwTWpRME5USTVNVFl3TURBd0xEQXdNQ0E0TURjek5URTFMREExTkRrd01EQXdMREF3TUNBd01URTVNRFkxTkN3d01EQXdNREF3TkRreUlEQXdNREExTWprNU9UWXdNREF3TURBd05qb3dNREFqY21Wd2IzTnBkR1VnTVRZd01EQXdZVzFsY21Ob1lYSmxQanhtYVd4c0lHWnBiSHdoZEhsa0xXRnVZMmh2Y2tCMWNtd3ZkM1ZvYjNBd0x5NDVPVEl3TnpNdU5EWXhNVFl6TGpRM0lpQmpkSGt0Y21WaGJHeDVQU0luTVRBd01EQXdJaUF2UGp3dmJtVmtMbUZqWTJWemN6NDBJR2x1SURFd01DQXdNREEzTURBNE55d3hNREF3TUMwd01UQXpMakkxTWl3d01EQXdMVEF4TURNdE1qVXlJREE0TkdNZ01USTFMakF3TURBZ05qVXVNREF3TURBZy1uMERBQVAiLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV19">
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ─────────────────────────────
-       TOKENS
-    ───────────────────────────── */
+    /* ══════════════════════════════════════
+       DESIGN TOKENS
+       ══════════════════════════════════════ */
     :root {
-      --ink:      #0d0d12;
-      --surf:     #16161e;
-      --raise:    #1e1e2a;
-      --rim:      rgba(255,255,255,0.07);
-      --pur:      #6c63ff;
-      --pur-lt:   #9d97ff;
-      --glow:     rgba(108,99,255,0.4);
-      --grn:      #22d3a5;
-      --amb:      #f59e0b;
-      --red:      #f43f5e;
-      --txt:      #efeffa;
-      --sub:      #7a7a94;
-      --st:       env(safe-area-inset-top, 0px);
-      --sb:       env(safe-area-inset-bottom, 0px);
+      /* Palette */
+      --ink:       #0d0d12;
+      --surface:   #17171f;
+      --raised:    #1f1f2c;
+      --rim:       rgba(255,255,255,0.06);
+      --primary:   #6c63ff;
+      --primary-lt:#8b83ff;
+      --glow:      rgba(108,99,255,0.35);
+      --green:     #22d3a5;
+      --amber:     #f59e0b;
+      --rose:      #f43f5e;
+      --text:      #f0f0f5;
+      --muted:     #7b7b95;
+      --safe-top:  env(safe-area-inset-top,0px);
+      --safe-bot:  env(safe-area-inset-bottom,0px);
     }
 
-    /* ─────────────────────────────
-       RESET
-    ───────────────────────────── */
+    /* ══════════════════════════════════════
+       RESET & BASE
+       ══════════════════════════════════════ */
     *, *::before, *::after {
       box-sizing: border-box; margin: 0; padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none; -webkit-user-select: none;
     }
-    html, body {
-      height: 100%; height: 100svh;
-      overflow: hidden;
+    html { scroll-behavior: smooth; }
+    body {
       font-family: 'Noto Sans JP', 'Inter', sans-serif;
       background: var(--ink);
-      color: var(--txt);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100svh;
+      overflow-x: hidden;
     }
 
-    /* ─────────────────────────────
-       APP SHELL  (全画面固定)
-    ───────────────────────────── */
+    /* ══════════════════════════════════════
+       APP SHELL
+       ══════════════════════════════════════ */
     #app {
-      position: fixed;
-      inset: 0;
+      width: 100%;
       max-width: 430px;
-      margin: 0 auto;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
-      background: var(--ink);
-      /* PCで見たとき境界線 */
-      box-shadow: 0 0 0 1px var(--rim);
-    }
-
-    /* ─────────────────────────────
-       SCREENS
-    ───────────────────────────── */
-    #screens {
-      flex: 1;
-      overflow: hidden;
       position: relative;
     }
+
+    /* ── Screens ── */
     .screen {
-      position: absolute;
-      inset: 0;
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      padding: calc(var(--safe-top) + 16px) 18px calc(var(--safe-bot) + 88px);
+      gap: 16px;
       overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      padding: calc(var(--st) + 14px) 16px calc(var(--sb) + 82px);
+      animation: fadeUp .25s ease both;
+    }
+    .screen.active { display: flex; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════════════
+       SHARED COMPONENTS
+       ══════════════════════════════════════ */
+
+    /* — Page Header — */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 6px;
+    }
+    .page-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .page-title span { color: var(--primary-lt); }
+    .header-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary-lt);
+      background: rgba(108,99,255,.15);
+      border: 1px solid rgba(108,99,255,.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* — Card — */
+    .card {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--rim);
+      padding: 18px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    /* — Button — */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: transform .1s, opacity .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-fill   { background: #fff; color: #000; }
+    .btn-ghost  { background: var(--raised); color: var(--text); border: 1px solid var(--rim); }
+    .btn-accent { background: var(--primary); color: #fff; box-shadow: 0 4px 20px var(--glow); }
+    .btn-green  { background: var(--green); color: #000; }
+
+    /* — Tag pills — */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      transition: all .18s;
+    }
+    .tag-default { background: var(--raised); color: var(--muted); border-color: var(--rim); }
+    .tag-active  { background: var(--primary); color: #fff; box-shadow: 0 2px 12px var(--glow); }
+
+    /* ══════════════════════════════════════
+       HOME SCREEN
+       ══════════════════════════════════════ */
+
+    /* — Streak banner — */
+    .streak-banner {
+      background: linear-gradient(135deg, #1c1b2e, #211f3a);
+      border-radius: 20px;
+      border: 1px solid rgba(108,99,255,.2);
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .streak-flame {
+      font-size: 38px;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px rgba(250,140,0,.6));
+    }
+    .streak-info { flex: 1; }
+    .streak-days {
+      font-family: 'Inter', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--amber);
+    }
+    .streak-days span { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 4px; }
+    .streak-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* — Mission progress — */
+    .mission-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .mission-label { font-size: 14px; color: var(--muted); }
+    .mission-count {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .prog-track {
+      background: var(--raised);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .prog-fill {
+      background: linear-gradient(90deg, var(--green), #6ee7b7);
+      height: 100%;
+      border-radius: 4px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+    }
+    .prog-dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .prog-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--raised);
+      border: 1px solid var(--rim);
+      transition: background .2s;
+    }
+    .prog-dot.done { background: var(--green); border-color: var(--green); }
+
+    /* — Scene tabs — */
+    .scene-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0;
+      scrollbar-width: none;
+    }
+    .scene-scroll::-webkit-scrollbar { display: none; }
+
+    /* — Phrase card for Home — */
+    .phrase-hero {
+      background: linear-gradient(160deg, #1c1b30, #141422);
+      border-radius: 24px;
+      border: 1px solid rgba(108,99,255,.15);
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .phrase-hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(108,99,255,.18), transparent 70%);
+      pointer-events: none;
+    }
+    .phrase-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .phrase-jp {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .phrase-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .phrase-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform .1s;
+    }
+    .phrase-btn:active { transform: scale(.96); }
+    .phrase-btn-speak { background: #fff; color: #000; }
+    .phrase-btn-next  { background: var(--raised); color: var(--text); border: 1px solid var(--rim); }
+
+    /* — Quick phrase grid — */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quick-item {
+      background: var(--surface);
+      border: 1px solid var(--rim);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .quick-item:active { background: var(--raised); }
+    .quick-icon { font-size: 20px; margin-bottom: 4px; }
+    .quick-jp   { font-size: 12px; color: var(--muted); }
+    .quick-en   { font-size: 13px; font-weight: 600; margin-top: 2px; }
+
+    /* — Stats row — */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .stat-box {
+      background: var(--surface);
+      border: 1px solid var(--rim);
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ══════════════════════════════════════
+       PRACTICE SCREEN (10フレーズ)
+       ══════════════════════════════════════ */
+
+    /* — Input area — */
+    .input-area {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--rim);
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .22s ease;
-    }
-    .screen.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* ─────────────────────────────
-       BOTTOM NAV  (固定)
-    ───────────────────────────── */
-    .bnav {
-      flex-shrink: 0;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      background: rgba(22,22,30,.96);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid var(--rim);
-      padding: 6px 0 calc(6px + var(--sb));
-    }
-    .bnav-btn {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 3px; background: none; border: none;
-      color: var(--sub); font-size: 10px; font-weight: 600;
-      cursor: pointer; padding: 6px 4px;
-      transition: color .15s;
-    }
-    .bnav-btn .ni { font-size: 22px; line-height: 1; }
-    .bnav-btn.active { color: var(--pur-lt); }
-    .bnav-btn .ndot {
-      width: 4px; height: 4px; border-radius: 50%;
-      background: transparent; transition: background .15s;
-    }
-    .bnav-btn.active .ndot { background: var(--pur-lt); }
-
-    /* ─────────────────────────────
-       SHARED COMPONENTS
-    ───────────────────────────── */
-    .phead {
-      display: flex; justify-content: space-between;
-      align-items: center; padding-top: 4px;
-    }
-    .ptitle {
-      font-family: 'Inter', sans-serif;
-      font-size: 22px; font-weight: 700; letter-spacing: -.5px;
-    }
-    .ptitle em { font-style: normal; color: var(--pur-lt); }
-    .badge {
-      font-size: 11px; font-weight: 700;
-      color: var(--pur-lt);
-      background: rgba(108,99,255,.15);
-      border: 1px solid rgba(108,99,255,.3);
-      padding: 4px 10px; border-radius: 20px;
-    }
-
-    .card {
-      background: var(--surf);
-      border-radius: 18px;
-      border: 1px solid var(--rim);
-      padding: 16px;
-    }
-    .clabel {
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .08em;
-      color: var(--sub); margin-bottom: 10px;
-    }
-
-    .btn {
-      width: 100%; padding: 15px; border-radius: 15px;
-      font-size: 15px; font-weight: 700; border: none;
-      cursor: pointer; display: flex; align-items: center;
-      justify-content: center; gap: 8px;
-      transition: transform .1s, opacity .15s;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-white  { background: #fff; color: #000; }
-    .btn-ghost  { background: var(--raise); color: var(--txt); border: 1px solid var(--rim); }
-    .btn-pur    { background: var(--pur); color: #fff; box-shadow: 0 4px 18px var(--glow); }
-    .btn-grn    { background: var(--grn); color: #000; }
-
-    .tag { display: inline-flex; align-items: center; gap: 4px;
-      padding: 7px 14px; border-radius: 20px;
-      font-size: 13px; font-weight: 600; white-space: nowrap;
-      cursor: pointer; border: 1px solid transparent;
-      transition: all .18s; }
-    .tag-off { background: var(--raise); color: var(--sub); border-color: var(--rim); }
-    .tag-on  { background: var(--pur); color: #fff; box-shadow: 0 2px 12px var(--glow); }
-
-    /* Scroll row */
-    .hscroll {
-      display: flex; gap: 8px; overflow-x: auto;
-      padding: 2px 0; scrollbar-width: none;
-    }
-    .hscroll::-webkit-scrollbar { display: none; }
-
-    /* ─────────────────────────────
-       HOME
-    ───────────────────────────── */
-    .streak-card {
-      background: linear-gradient(140deg,#1a1926,#13131c);
-      border-radius: 18px;
-      border: 1px solid rgba(108,99,255,.18);
-      padding: 16px;
-      display: flex; align-items: center; gap: 16px;
-    }
-    .streak-flame { font-size: 40px; filter: drop-shadow(0 0 10px rgba(245,158,11,.55)); }
-    .streak-days  { font-family:'Inter',sans-serif; font-size:30px; font-weight:700; color:var(--amb); line-height:1; }
-    .streak-days span { font-size:13px; font-weight:400; color:var(--sub); margin-left:4px; }
-    .streak-sub   { font-size:12px; color:var(--sub); margin-top:2px; }
-
-    .prog-row  { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-    .prog-lbl  { font-size:14px; color:var(--sub); }
-    .prog-cnt  { font-family:'Inter',sans-serif; font-size:15px; font-weight:700; color:var(--grn); }
-    .prog-track { background:var(--raise); height:8px; border-radius:4px; overflow:hidden; }
-    .prog-fill  { background:linear-gradient(90deg,var(--grn),#6ee7b7);
-      height:100%; border-radius:4px; transition:width .4s cubic-bezier(.4,0,.2,1); }
-    .prog-dots  { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
-    .pdot { width:8px; height:8px; border-radius:50%;
-      background:var(--raise); border:1px solid var(--rim); transition:background .2s; }
-    .pdot.done { background:var(--grn); border-color:var(--grn); }
-
-    .phrase-hero {
-      background: linear-gradient(160deg,#1a1928,#111119);
-      border-radius: 20px; border: 1px solid rgba(108,99,255,.14);
-      padding: 20px; position: relative; overflow: hidden;
-    }
-    .phrase-hero::before {
-      content:''; position:absolute; top:-50px; right:-50px;
-      width:180px; height:180px;
-      background:radial-gradient(circle,rgba(108,99,255,.16),transparent 70%);
-      pointer-events:none;
-    }
-    .ph-en { font-family:'Inter',sans-serif; font-size:23px; font-weight:700; line-height:1.3; margin-bottom:6px; }
-    .ph-jp { font-size:14px; color:var(--sub); margin-bottom:18px; }
-    .ph-acts { display:flex; gap:10px; }
-    .ph-btn {
-      flex:1; padding:12px 8px; border-radius:13px;
-      font-size:13px; font-weight:700; border:none; cursor:pointer;
-      display:flex; align-items:center; justify-content:center; gap:5px;
-      transition:transform .1s;
-    }
-    .ph-btn:active { transform:scale(.95); }
-    .ph-btn-play { background:#fff; color:#000; }
-    .ph-btn-next { background:var(--raise); color:var(--txt); border:1px solid var(--rim); }
-
-    .stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-    .stat-box {
-      background:var(--surf); border:1px solid var(--rim);
-      border-radius:15px; padding:13px 10px; text-align:center;
-    }
-    .stat-n { font-family:'Inter',sans-serif; font-size:22px; font-weight:700; }
-    .stat-l { font-size:11px; color:var(--sub); margin-top:2px; }
-
-    .quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .qi {
-      background:var(--surf); border:1px solid var(--rim);
-      border-radius:14px; padding:12px; cursor:pointer;
-      transition:background .15s;
-    }
-    .qi:active { background:var(--raise); }
-    .qi-icon { font-size:20px; margin-bottom:4px; }
-    .qi-jp   { font-size:12px; color:var(--sub); }
-    .qi-en   { font-size:13px; font-weight:600; margin-top:2px; }
-
-    /* ─────────────────────────────
-       PRACTICE
-    ───────────────────────────── */
-    .input-area {
-      background:var(--surf); border-radius:18px;
-      border:1px solid var(--rim); padding:14px;
-      display:flex; flex-direction:column; gap:12px;
     }
     .mic-row {
-      display:flex; align-items:center; gap:12px;
-      background:var(--raise); border-radius:14px; padding:12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--raised);
+      border-radius: 16px;
+      padding: 12px 16px;
     }
     .mic-btn {
-      width:48px; height:48px; border-radius:50%;
-      background:var(--pur); border:none; color:#fff;
-      font-size:20px; cursor:pointer; flex-shrink:0;
-      box-shadow:0 4px 16px var(--glow);
-      transition:transform .1s, box-shadow .2s;
-      display:flex; align-items:center; justify-content:center;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px var(--glow);
+      transition: transform .1s, box-shadow .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .mic-btn.on {
-      background:var(--red);
-      box-shadow:0 0 0 8px rgba(244,63,94,.18);
-      animation:pulse 1s infinite;
+    .mic-btn.listening {
+      background: var(--rose);
+      box-shadow: 0 0 0 8px rgba(244,63,94,.2);
+      animation: pulse 1s infinite;
     }
     @keyframes pulse {
-      0%,100% { box-shadow:0 0 0 6px rgba(244,63,94,.12); }
-      50%      { box-shadow:0 0 0 14px rgba(244,63,94,.06); }
+      0%,100% { box-shadow: 0 0 0 6px rgba(244,63,94,.15); }
+      50%      { box-shadow: 0 0 0 12px rgba(244,63,94,.08); }
     }
-    .mic-txt { font-size:14px; color:var(--sub); line-height:1.5; }
-    .mic-txt.has { color:var(--txt); font-weight:500; }
-
-    .result-box {
-      background:var(--surf); border-radius:18px;
-      border:1px solid var(--rim); overflow:hidden;
+    .mic-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
     }
-    .rsec { padding:15px 17px; }
-    .rsec + .rsec { border-top:1px solid var(--rim); }
-    .rwho { font-size:11px; font-weight:700; text-transform:uppercase;
-      letter-spacing:.08em; color:var(--sub); margin-bottom:5px; }
-    .ren  { font-family:'Inter',sans-serif; font-size:20px; font-weight:700; line-height:1.3; margin-bottom:4px; }
-    .rjp  { font-size:13px; color:var(--sub); }
-    .ract {
-      display:flex; gap:8px; padding:11px 16px;
-      background:var(--raise); border-top:1px solid var(--rim);
+    .mic-text.has-input { color: var(--text); font-weight: 500; }
+
+    /* — Result box — */
+    .result-area {
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--rim);
+      overflow: hidden;
     }
-    .ract-btn {
-      flex:1; padding:10px 5px; border-radius:11px;
-      background:var(--surf); border:1px solid var(--rim);
-      color:var(--txt); font-size:12px; font-weight:600;
-      cursor:pointer; display:flex; align-items:center;
-      justify-content:center; gap:4px; transition:background .15s;
+    .result-section {
+      padding: 16px 18px;
     }
-    .ract-btn:active { background:var(--ink); }
+    .result-section + .result-section {
+      border-top: 1px solid var(--rim);
+    }
+    .result-who {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .result-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .result-jp { font-size: 13px; color: var(--muted); }
 
-    /* Score ring */
-    .score-wrap { display:flex; justify-content:center; padding:6px 0; }
-    .ring-svg   { transform:rotate(-90deg); }
-    .ring-bg    { fill:none; stroke:var(--raise); stroke-width:7; }
-    .ring-fg    { fill:none; stroke:var(--grn); stroke-width:7;
-      stroke-linecap:round; stroke-dasharray:188.5; stroke-dashoffset:188.5;
-      transition:stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); }
-    .ring-cnt   { position:absolute; inset:0; display:flex;
-      flex-direction:column; align-items:center; justify-content:center; }
-    .ring-n     { font-family:'Inter',sans-serif; font-size:26px; font-weight:700; }
-    .ring-u     { font-size:11px; color:var(--sub); }
+    .result-actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 18px;
+      background: var(--raised);
+    }
+    .result-action-btn {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--rim);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: background .15s;
+    }
+    .result-action-btn:active { background: var(--raised); }
 
-    /* Typing dots */
-    .tdots      { display:flex; gap:4px; padding:4px 0; }
-    .tdot       { width:6px; height:6px; border-radius:50%; background:var(--sub);
-      animation:dbounce .9s infinite; }
-    .tdot:nth-child(2) { animation-delay:.15s; }
-    .tdot:nth-child(3) { animation-delay:.3s; }
-    @keyframes dbounce {
-      0%,80%,100% { transform:translateY(0); opacity:.4; }
-      40%         { transform:translateY(-4px); opacity:1; }
+    /* — Scoring ring — */
+    .score-ring-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 8px 0;
+    }
+    .score-ring-svg { transform: rotate(-90deg); }
+    .score-ring-bg  { fill: none; stroke: var(--raised); stroke-width: 6; }
+    .score-ring-fg  {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 188.5;
+      stroke-dashoffset: 188.5;
+      transition: stroke-dashoffset .6s cubic-bezier(.4,0,.2,1);
+    }
+    .score-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-num  { font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 700; }
+    .score-unit { font-size: 11px; color: var(--muted); }
+
+    /* ══════════════════════════════════════
+       HISTORY SCREEN
+       ══════════════════════════════════════ */
+    .history-day {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-top: 4px;
+    }
+    .history-item {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--rim);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .history-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--raised);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .history-en { font-size: 15px; font-weight: 600; }
+    .history-jp { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .history-meta { display: flex; gap: 8px; margin-top: 6px; }
+    .history-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .history-tag-scene { background: rgba(108,99,255,.15); color: var(--primary-lt); }
+    .history-tag-score { background: rgba(34,211,165,.15); color: var(--green); }
+
+    .heatmap-wrap { display: flex; flex-wrap: wrap; gap: 4px; }
+    .heatmap-cell {
+      width: 14px; height: 14px;
+      border-radius: 3px;
+      background: var(--raised);
+    }
+    .heatmap-cell.d1 { background: rgba(34,211,165,.25); }
+    .heatmap-cell.d2 { background: rgba(34,211,165,.5); }
+    .heatmap-cell.d3 { background: rgba(34,211,165,.8); }
+
+    /* ══════════════════════════════════════
+       SETTINGS SCREEN
+       ══════════════════════════════════════ */
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rim);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 15px; }
+    .setting-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* Toggle switch */
+    .toggle {
+      width: 44px; height: 26px;
+      background: var(--raised);
+      border-radius: 13px;
+      border: 1px solid var(--rim);
+      cursor: pointer;
+      position: relative;
+      transition: background .2s;
+    }
+    .toggle.on { background: var(--primary); border-color: transparent; }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+    }
+    .toggle.on::after { transform: translateX(18px); }
+
+    /* Select menu */
+    .setting-select {
+      background: var(--raised);
+      border: 1px solid var(--rim);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
     }
 
-    /* ─────────────────────────────
-       HISTORY
-    ───────────────────────────── */
-    .hday  { font-size:12px; font-weight:700; color:var(--sub);
-      text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
-    .hitem {
-      background:var(--surf); border-radius:15px;
-      border:1px solid var(--rim); padding:13px 15px;
-      display:flex; align-items:flex-start; gap:12px;
+    /* Character selector */
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
-    .hico  { width:36px; height:36px; border-radius:10px;
-      background:var(--raise); display:flex; align-items:center;
-      justify-content:center; font-size:18px; flex-shrink:0; }
-    .hen   { font-size:15px; font-weight:600; }
-    .hjp   { font-size:12px; color:var(--sub); margin-top:2px; }
-    .hmeta { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
-    .htag  { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:600; }
-    .htag-s { background:rgba(108,99,255,.15); color:var(--pur-lt); }
-    .htag-r { background:rgba(34,211,165,.15); color:var(--grn); }
-
-    .heatmap { display:flex; flex-wrap:wrap; gap:4px; }
-    .hcell   { width:13px; height:13px; border-radius:3px; background:var(--raise); }
-    .hcell.l1 { background:rgba(34,211,165,.25); }
-    .hcell.l2 { background:rgba(34,211,165,.5); }
-    .hcell.l3 { background:rgba(34,211,165,.85); }
-
-    /* ─────────────────────────────
-       SETTINGS
-    ───────────────────────────── */
-    .srow {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:13px 0; border-bottom:1px solid var(--rim);
-    }
-    .srow:last-child { border-bottom:none; }
-    .slbl { font-size:15px; }
-    .ssub { font-size:12px; color:var(--sub); margin-top:2px; }
-
-    .tog { width:44px; height:26px; background:var(--raise);
-      border-radius:13px; border:1px solid var(--rim);
-      cursor:pointer; position:relative; transition:background .2s; }
-    .tog.on { background:var(--pur); border-color:transparent; }
-    .tog::after { content:''; position:absolute; top:3px; left:3px;
-      width:18px; height:18px; border-radius:50%; background:#fff;
-      transition:transform .2s; }
-    .tog.on::after { transform:translateX(18px); }
-
-    .ssel {
-      background:var(--raise); border:1px solid var(--rim);
-      color:var(--txt); border-radius:10px; padding:6px 10px;
-      font-size:13px; cursor:pointer; font-family:inherit;
-    }
-
-    .char-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .char-card {
-      background:var(--raise); border:2px solid transparent;
-      border-radius:15px; padding:14px 8px; text-align:center;
-      cursor:pointer; transition:border-color .15s, background .15s;
+      background: var(--raised);
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
     }
-    .char-card.sel { border-color:var(--pur); background:rgba(108,99,255,.1); }
-    .char-av { font-size:30px; margin-bottom:4px; }
-    .char-nm { font-size:12px; font-weight:600; }
-    .char-rl { font-size:11px; color:var(--sub); }
+    .char-card.selected { border-color: var(--primary); background: rgba(108,99,255,.1); }
+    .char-avatar { font-size: 32px; margin-bottom: 4px; }
+    .char-name  { font-size: 12px; font-weight: 600; }
+    .char-role  { font-size: 11px; color: var(--muted); }
 
-    /* Install guide */
-    .install-card {
-      background:linear-gradient(140deg,#1a1928,#111119);
-      border-radius:18px; border:1px solid rgba(108,99,255,.22);
-      padding:16px; display:flex; align-items:flex-start; gap:14px;
+    /* Install banner */
+    .install-banner {
+      background: linear-gradient(135deg, #1c1b30, #211f3a);
+      border-radius: 18px;
+      border: 1px solid rgba(108,99,255,.25);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
-    .inst-icon { font-size:28px; flex-shrink:0; }
-    .inst-body { flex:1; }
-    .inst-ttl  { font-size:14px; font-weight:700; margin-bottom:6px; }
-    .inst-step { font-size:12px; color:var(--sub); line-height:1.7; }
-    .inst-step strong { color:var(--txt); }
+    .install-icon { font-size: 30px; }
+    .install-text { flex: 1; font-size: 13px; color: var(--muted); }
+    .install-text strong { display: block; color: var(--text); font-size: 14px; margin-bottom: 2px; }
+    .install-btn {
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
 
-    /* Spinner */
-    .spin { display:inline-block; width:17px; height:17px;
-      border:2px solid rgba(255,255,255,.3); border-top-color:#fff;
-      border-radius:50%; animation:spinning .7s linear infinite; }
-    @keyframes spinning { to { transform:rotate(360deg); } }
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Toast */
+    /* AI typing indicator */
+    .typing-dots { display: flex; gap: 4px; padding: 4px 0; }
+    .typing-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: dotBounce .9s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .15s; }
+    .typing-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes dotBounce {
+      0%,80%,100% { transform: translateY(0); opacity:.4; }
+      40%         { transform: translateY(-4px); opacity:1; }
+    }
+
+    /* Toast notification */
     .toast {
-      position:fixed; bottom:calc(var(--sb) + 90px); left:50%;
-      transform:translateX(-50%) translateY(12px);
-      background:var(--raise); border:1px solid var(--rim);
-      border-radius:14px; padding:11px 20px; font-size:13px;
-      font-weight:500; opacity:0;
-      transition:opacity .22s, transform .22s;
-      z-index:500; white-space:nowrap; max-width:90%;
+      position: fixed;
+      bottom: calc(var(--safe-bot) + 96px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--raised);
+      border: 1px solid var(--rim);
+      border-radius: 16px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity .25s, transform .25s;
+      z-index: 200;
+      white-space: nowrap;
+      max-width: 90%;
     }
-    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ══════════════════════════════════════
+       BOTTOM NAV
+       ══════════════════════════════════════ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: rgba(23,23,31,.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-top: 1px solid var(--rim);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 8px 0 calc(8px + var(--safe-bot));
+      z-index: 100;
+    }
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px;
+      transition: color .15s;
+    }
+    .nav-btn.active { color: var(--primary-lt); }
+    .nav-btn .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-btn .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background .15s;
+    }
+    .nav-btn.active .nav-dot { background: var(--primary-lt); }
 
     /* Completion overlay */
-    .complete {
-      position:fixed; inset:0;
-      background:rgba(13,13,18,.93);
-      backdrop-filter:blur(14px);
-      display:none; flex-direction:column;
-      align-items:center; justify-content:center;
-      gap:18px; z-index:400;
+    .complete-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(13,13,18,.9);
+      backdrop-filter: blur(12px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      z-index: 300;
+      animation: fadeUp .3s ease both;
     }
-    .complete.show { display:flex; animation:fadeUp .3s ease both; }
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(10px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    .comp-medal  { font-size:70px; filter:drop-shadow(0 0 20px rgba(245,158,11,.4)); }
-    .comp-ttl    { font-size:26px; font-weight:700; text-align:center; }
-    .comp-sub    { color:var(--sub); font-size:14px; text-align:center; line-height:1.6; }
+    .complete-overlay.show { display: flex; }
+    .complete-medal { font-size: 72px; filter: drop-shadow(0 0 20px rgba(245,158,11,.4)); }
+    .complete-title { font-size: 26px; font-weight: 700; text-align: center; }
+    .complete-sub   { color: var(--muted); font-size: 15px; text-align: center; }
 
-    /* Update banner */
-    .update-bar {
-      position:fixed; top:calc(var(--st) + 4px); left:50%;
-      transform:translateX(-50%);
-      background:var(--pur); color:#fff;
-      padding:8px 20px; border-radius:20px;
-      font-size:13px; font-weight:600; cursor:pointer;
-      z-index:300; display:none; box-shadow:0 4px 20px var(--glow);
+    /* Responsive for desktop viewing */
+    @media (min-width: 430px) {
+      #app { border-left: 1px solid var(--rim); border-right: 1px solid var(--rim); }
     }
-    .update-bar.show { display:block; }
   </style>
 </head>
 <body>
 
 <div id="app">
-  <div id="screens">
 
-    <!-- ══ HOME ══ -->
-    <div id="scr-home" class="screen active">
-      <div class="phead">
-        <div class="ptitle">Talk<em>Go</em></div>
-        <span class="badge" id="hBadge">👋 あいさつ</span>
+  <!-- ══════════════════════════════════
+       HOME SCREEN
+       ══════════════════════════════════ -->
+  <div id="screen-home" class="screen active">
+
+    <header class="page-header">
+      <div class="page-title">Talk<span>Go</span></div>
+      <span class="header-badge" id="homeBadge">🇺🇸 あいさつ</span>
+    </header>
+
+    <!-- Streak -->
+    <div class="streak-banner">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-info">
+        <div class="streak-days" id="streakDays">5<span>日連続</span></div>
+        <div class="streak-sub">今日もミッションをクリアしよう！</div>
       </div>
+    </div>
 
-      <!-- Streak -->
-      <div class="streak-card">
-        <div class="streak-flame">🔥</div>
+    <!-- Daily Mission -->
+    <div class="card">
+      <div class="mission-row">
+        <span class="mission-label">今日のミッション</span>
+        <span class="mission-count" id="missionCountHome">0 / 10</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFillHome" style="width:0%"></div>
+      </div>
+      <div class="prog-dots" id="progDots">
+        <!-- 10 dots injected by JS -->
+      </div>
+    </div>
+
+    <!-- Scene tabs -->
+    <div class="scene-scroll" id="sceneTabs"></div>
+
+    <!-- Today's featured phrase -->
+    <div class="phrase-hero" id="phraseHero">
+      <div class="phrase-en" id="phraseEn">—</div>
+      <div class="phrase-jp" id="phraseJp">タップして読み込む</div>
+      <div class="phrase-actions">
+        <button class="phrase-btn phrase-btn-speak" onclick="speakPhrase()">🔊 聞く</button>
+        <button class="phrase-btn phrase-btn-next" onclick="nextPhrase()">次へ →</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-num" id="statPhrases">0</div>
+        <div class="stat-label">総フレーズ</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statDays">0</div>
+        <div class="stat-label">学習日数</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statScore" style="color:var(--amber)">—</div>
+        <div class="stat-label">平均スコア</div>
+      </div>
+    </div>
+
+    <!-- Quick phrases -->
+    <div class="card-title" style="margin-top:4px">すぐ使えるフレーズ</div>
+    <div class="quick-grid" id="quickGrid"></div>
+
+  </div><!-- /home -->
+
+
+  <!-- ══════════════════════════════════
+       PRACTICE SCREEN
+       ══════════════════════════════════ -->
+  <div id="screen-practice" class="screen">
+
+    <header class="page-header">
+      <div class="page-title">練習</div>
+      <span class="header-badge" id="pracBadge">0 / 10</span>
+    </header>
+
+    <!-- Scene tabs -->
+    <div class="scene-scroll" id="sceneTabsPrac"></div>
+
+    <!-- Input -->
+    <div class="input-area">
+      <div class="mic-row">
+        <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</button>
+        <div class="mic-text" id="micText">マイクを押して話す、またはフレーズを選ぶ</div>
+      </div>
+      <button class="btn btn-fill" id="translateBtn" onclick="doTranslate()">
+        <span>✨</span> 英語に変換する
+      </button>
+    </div>
+
+    <!-- Result -->
+    <div class="result-area" id="resultArea" style="display:none">
+      <div class="result-section">
+        <div class="result-who">あなたの英語</div>
+        <div class="result-en" id="resultEn">—</div>
+        <div class="result-jp" id="resultJp">—</div>
+      </div>
+      <div class="result-actions">
+        <button class="result-action-btn" onclick="speakResult()">🔊 聞く</button>
+        <button class="result-action-btn" onclick="repeatPractice()">🔄 3回練習</button>
+        <button class="result-action-btn" onclick="getPartnerReply()">💬 返答を聞く</button>
+      </div>
+      <div class="result-section" id="partnerSection" style="display:none">
+        <div class="result-who" id="partnerWho">相手の返答</div>
+        <div class="result-en" id="partnerEn">
+          <div class="typing-dots" id="typingDots" style="display:none">
+            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+          </div>
+          <span id="partnerEnText">—</span>
+        </div>
+        <div class="result-jp" id="partnerJp">—</div>
+      </div>
+    </div>
+
+    <!-- Pronunciation score -->
+    <div class="card" id="scoreCard" style="display:none">
+      <div class="card-title">発音スコア</div>
+      <div style="position:relative; width:80px; margin: 0 auto 12px;">
+        <svg class="score-ring-svg" width="80" height="80" viewBox="0 0 80 80">
+          <circle class="score-ring-bg" cx="40" cy="40" r="30"/>
+          <circle class="score-ring-fg" id="scoreRing" cx="40" cy="40" r="30"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-num" id="scoreNum">—</div>
+          <div class="score-unit">点</div>
+        </div>
+      </div>
+      <div style="font-size:13px; color:var(--muted); text-align:center" id="scoreFeedback"></div>
+    </div>
+
+    <!-- Quick phrases list -->
+    <div class="card-title">フレーズを選ぶ</div>
+    <div class="quick-grid" id="quickGridPrac"></div>
+
+  </div><!-- /practice -->
+
+
+  <!-- ══════════════════════════════════
+       HISTORY SCREEN
+       ══════════════════════════════════ -->
+  <div id="screen-history" class="screen">
+
+    <header class="page-header">
+      <div class="page-title">履歴</div>
+    </header>
+
+    <!-- Heatmap -->
+    <div class="card">
+      <div class="card-title">学習カレンダー（過去3ヶ月）</div>
+      <div class="heatmap-wrap" id="heatmap"></div>
+      <div style="display:flex; gap:10px; margin-top:10px; font-size:11px; color:var(--muted); align-items:center">
+        <div style="width:12px;height:12px;border-radius:3px;background:var(--raised);border:1px solid var(--rim)"></div>未学習
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.25)"></div>少
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.5)"></div>中
+        <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.8)"></div>多
+      </div>
+    </div>
+
+    <!-- History list -->
+    <div id="historyList" style="display:flex;flex-direction:column;gap:10px"></div>
+
+  </div><!-- /history -->
+
+
+  <!-- ══════════════════════════════════
+       SETTINGS SCREEN
+       ══════════════════════════════════ -->
+  <div id="screen-settings" class="screen">
+
+    <header class="page-header">
+      <div class="page-title">設定</div>
+    </header>
+
+    <!-- PWA install -->
+    <div class="install-banner" id="installBanner" style="display:none">
+      <div class="install-icon">📲</div>
+      <div class="install-text">
+        <strong>ホーム画面に追加</strong>
+        アプリとしてインストールして、いつでも素早くアクセス
+      </div>
+      <button class="install-btn" onclick="doInstall()">追加</button>
+    </div>
+
+    <!-- Character -->
+    <div class="card">
+      <div class="card-title">会話キャラクター</div>
+      <div class="char-grid" id="charGrid"></div>
+    </div>
+
+    <!-- General settings -->
+    <div class="card">
+      <div class="card-title">一般</div>
+
+      <div class="setting-row">
         <div>
-          <div class="streak-days" id="streakN">1<span>日連続</span></div>
-          <div class="streak-sub">今日もミッションをクリアしよう！</div>
+          <div class="setting-label">日本語字幕を表示</div>
+          <div class="setting-sub">英文の下に日本語訳を表示する</div>
         </div>
+        <div class="toggle on" id="toggle-jp" onclick="toggleSetting('showJp', this)"></div>
       </div>
 
-      <!-- Mission progress -->
-      <div class="card">
-        <div class="prog-row">
-          <span class="prog-lbl">今日のミッション</span>
-          <span class="prog-cnt" id="homeCnt">0 / 10</span>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">自動音声読み上げ</div>
+          <div class="setting-sub">変換後に自動で英語を読み上げる</div>
         </div>
-        <div class="prog-track">
-          <div class="prog-fill" id="homeFill" style="width:0%"></div>
-        </div>
-        <div class="prog-dots" id="homeDots"></div>
+        <div class="toggle" id="toggle-autoSpeak" onclick="toggleSetting('autoSpeak', this)"></div>
       </div>
 
-      <!-- Scene tabs -->
-      <div class="hscroll" id="hScenes"></div>
-
-      <!-- Featured phrase -->
-      <div class="phrase-hero">
-        <div class="ph-en" id="phEn">—</div>
-        <div class="ph-jp" id="phJp">読み込み中…</div>
-        <div class="ph-acts">
-          <button class="ph-btn ph-btn-play" onclick="playFeatured()">🔊 聞く</button>
-          <button class="ph-btn ph-btn-next" onclick="nextFeatured()">次へ →</button>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">発音採点</div>
+          <div class="setting-sub">マイクで話した後に発音を評価する</div>
         </div>
+        <div class="toggle on" id="toggle-score" onclick="toggleSetting('showScore', this)"></div>
       </div>
 
-      <!-- Stats -->
-      <div class="stat-row">
-        <div class="stat-box"><div class="stat-n" id="stTotal">0</div><div class="stat-l">総フレーズ</div></div>
-        <div class="stat-box"><div class="stat-n" id="stDays">0</div><div class="stat-l">学習日数</div></div>
-        <div class="stat-box"><div class="stat-n" id="stScore" style="color:var(--amb)">—</div><div class="stat-l">平均スコア</div></div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">1日の目標フレーズ数</div>
+        </div>
+        <select class="setting-select" id="dailyGoalSelect" onchange="saveDailyGoal()">
+          <option value="5">5フレーズ</option>
+          <option value="10" selected>10フレーズ</option>
+          <option value="15">15フレーズ</option>
+          <option value="20">20フレーズ</option>
+        </select>
       </div>
 
-      <!-- Quick phrases -->
-      <div class="clabel" style="margin-top:4px">すぐ使えるフレーズ</div>
-      <div class="quick-grid" id="hQuick"></div>
-    </div><!-- /home -->
-
-
-    <!-- ══ PRACTICE ══ -->
-    <div id="scr-practice" class="screen">
-      <div class="phead">
-        <div class="ptitle">練習</div>
-        <span class="badge" id="pBadge">0 / 10</span>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">英語レベル</div>
+        </div>
+        <select class="setting-select" id="levelSelect" onchange="saveLevel()">
+          <option value="beginner" selected>超初心者</option>
+          <option value="basic">初心者</option>
+          <option value="intermediate">中級者</option>
+        </select>
       </div>
+    </div>
 
-      <div class="hscroll" id="pScenes"></div>
-
-      <!-- Input -->
-      <div class="input-area">
-        <div class="mic-row">
-          <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</button>
-          <div class="mic-txt" id="micTxt">マイクを押して話す、またはフレーズを選ぶ</div>
+    <!-- Data -->
+    <div class="card">
+      <div class="card-title">データ</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">学習データをリセット</div>
+          <div class="setting-sub">すべての進捗・履歴が消えます</div>
         </div>
-        <button class="btn btn-white" id="transBtn" onclick="doTranslate()">
-          <span>✨</span> 英語に変換する
-        </button>
+        <button class="btn btn-ghost" style="width:auto;padding:8px 14px;font-size:13px;border-radius:12px" onclick="resetData()">リセット</button>
       </div>
+    </div>
 
-      <!-- Result -->
-      <div class="result-box" id="resBox" style="display:none">
-        <div class="rsec">
-          <div class="rwho">あなたの英語</div>
-          <div class="ren" id="resEn">—</div>
-          <div class="rjp" id="resJp"></div>
-        </div>
-        <div class="ract">
-          <button class="ract-btn" onclick="playResult()">🔊 聞く</button>
-          <button class="ract-btn" onclick="do3repeat()">🔄 3回練習</button>
-          <button class="ract-btn" onclick="getReply()">💬 返答</button>
-        </div>
-        <div class="rsec" id="partnerSec" style="display:none">
-          <div class="rwho" id="partnerWho">相手の返答</div>
-          <div class="ren">
-            <div class="tdots" id="tdots" style="display:none">
-              <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
-            </div>
-            <span id="partnerEnTxt">—</span>
-          </div>
-          <div class="rjp" id="partnerJpTxt"></div>
-        </div>
-      </div>
+    <div style="text-align:center;font-size:12px;color:var(--muted);padding-bottom:8px">
+      TalkGo v2.0 — AI英会話練習アプリ
+    </div>
 
-      <!-- Score ring -->
-      <div class="card" id="scoreCard" style="display:none">
-        <div class="clabel">発音スコア</div>
-        <div class="score-wrap">
-          <div style="position:relative;width:80px;height:80px">
-            <svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">
-              <circle class="ring-bg" cx="40" cy="40" r="30"/>
-              <circle class="ring-fg" id="ringFg" cx="40" cy="40" r="30"/>
-            </svg>
-            <div class="ring-cnt">
-              <div class="ring-n" id="ringN">—</div>
-              <div class="ring-u">点</div>
-            </div>
-          </div>
-        </div>
-        <div style="font-size:13px;color:var(--sub);text-align:center;margin-top:6px" id="ringFb"></div>
-      </div>
-
-      <!-- Quick phrase selector -->
-      <div class="clabel">フレーズを選ぶ</div>
-      <div class="quick-grid" id="pQuick"></div>
-    </div><!-- /practice -->
+  </div><!-- /settings -->
 
 
-    <!-- ══ HISTORY ══ -->
-    <div id="scr-history" class="screen">
-      <div class="phead">
-        <div class="ptitle">履歴</div>
-      </div>
-
-      <div class="card">
-        <div class="clabel">学習カレンダー (過去90日)</div>
-        <div class="heatmap" id="heatmap"></div>
-        <div style="display:flex;gap:10px;margin-top:10px;font-size:11px;color:var(--sub);align-items:center">
-          <div style="width:12px;height:12px;border-radius:3px;background:var(--raise);border:1px solid var(--rim)"></div>未
-          <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.25)"></div>少
-          <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.5)"></div>中
-          <div style="width:12px;height:12px;border-radius:3px;background:rgba(34,211,165,.85)"></div>多
-        </div>
-      </div>
-
-      <div id="histList" style="display:flex;flex-direction:column;gap:10px"></div>
-    </div><!-- /history -->
-
-
-    <!-- ══ SETTINGS ══ -->
-    <div id="scr-settings" class="screen">
-      <div class="phead">
-        <div class="ptitle">設定</div>
-      </div>
-
-      <!-- Install guide -->
-      <div class="install-card">
-        <div class="inst-icon">📲</div>
-        <div class="inst-body">
-          <div class="inst-ttl">ホーム画面に追加する方法</div>
-          <div class="inst-step" id="installGuide">
-            読み込み中…
-          </div>
-        </div>
-      </div>
-
-      <!-- Character -->
-      <div class="card">
-        <div class="clabel">会話キャラクター</div>
-        <div class="char-grid" id="charGrid"></div>
-      </div>
-
-      <!-- Settings -->
-      <div class="card">
-        <div class="clabel">一般設定</div>
-
-        <div class="srow">
-          <div><div class="slbl">日本語字幕</div><div class="ssub">英文の下に日本語訳を表示</div></div>
-          <div class="tog on" id="tog-showJp" onclick="tg('showJp',this)"></div>
-        </div>
-        <div class="srow">
-          <div><div class="slbl">自動読み上げ</div><div class="ssub">変換後に自動で英語を読む</div></div>
-          <div class="tog" id="tog-autoSpeak" onclick="tg('autoSpeak',this)"></div>
-        </div>
-        <div class="srow">
-          <div><div class="slbl">発音採点</div><div class="ssub">練習後に発音スコアを表示</div></div>
-          <div class="tog on" id="tog-showScore" onclick="tg('showScore',this)"></div>
-        </div>
-        <div class="srow">
-          <div><div class="slbl">1日の目標</div></div>
-          <select class="ssel" id="goalSel" onchange="saveGoal()">
-            <option value="5">5フレーズ</option>
-            <option value="10" selected>10フレーズ</option>
-            <option value="15">15フレーズ</option>
-            <option value="20">20フレーズ</option>
-          </select>
-        </div>
-        <div class="srow">
-          <div><div class="slbl">英語レベル</div></div>
-          <select class="ssel" id="lvlSel" onchange="saveLevel()">
-            <option value="beginner" selected>超初心者</option>
-            <option value="basic">初心者</option>
-            <option value="intermediate">中級</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="clabel">データ</div>
-        <div class="srow">
-          <div><div class="slbl">学習データをリセット</div><div class="ssub">進捗・履歴がすべて消えます</div></div>
-          <button class="btn btn-ghost" style="width:auto;padding:8px 14px;font-size:13px;border-radius:11px" onclick="resetAll()">リセット</button>
-        </div>
-      </div>
-
-      <div style="text-align:center;font-size:12px;color:var(--sub);padding-bottom:4px">
-        TalkGo v2.1 — AI旅行英会話練習
-      </div>
-    </div><!-- /settings -->
-
-  </div><!-- /screens -->
-
-  <!-- Bottom Nav -->
-  <nav class="bnav">
-    <button class="bnav-btn active" data-s="home" onclick="nav('home')">
-      <span class="ni">🏠</span><span>ホーム</span><div class="ndot"></div>
+  <!-- ══════════════════════════════════
+       BOTTOM NAV
+       ══════════════════════════════════ -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-screen="home" onclick="navigate('home')">
+      <span class="nav-icon">🏠</span><span>ホーム</span><div class="nav-dot"></div>
     </button>
-    <button class="bnav-btn" data-s="practice" onclick="nav('practice')">
-      <span class="ni">🎯</span><span>練習</span><div class="ndot"></div>
+    <button class="nav-btn" data-screen="practice" onclick="navigate('practice')">
+      <span class="nav-icon">🎯</span><span>練習</span><div class="nav-dot"></div>
     </button>
-    <button class="bnav-btn" data-s="history" onclick="nav('history')">
-      <span class="ni">📚</span><span>履歴</span><div class="ndot"></div>
+    <button class="nav-btn" data-screen="history" onclick="navigate('history')">
+      <span class="nav-icon">📚</span><span>履歴</span><div class="nav-dot"></div>
     </button>
-    <button class="bnav-btn" data-s="settings" onclick="nav('settings')">
-      <span class="ni">⚙️</span><span>設定</span><div class="ndot"></div>
+    <button class="nav-btn" data-screen="settings" onclick="navigate('settings')">
+      <span class="nav-icon">⚙️</span><span>設定</span><div class="nav-dot"></div>
     </button>
   </nav>
-</div>
 
-<!-- Completion overlay -->
-<div class="complete" id="compOverlay">
-  <div class="comp-medal">🏅</div>
-  <div class="comp-ttl">ミッション達成！</div>
-  <div class="comp-sub">今日の目標をすべてクリア！<br>明日も続けて連続記録を伸ばそう 🔥</div>
-  <button class="btn btn-pur" style="max-width:220px" onclick="closeComp()">つづける</button>
-</div>
+  <!-- Mission complete overlay -->
+  <div class="complete-overlay" id="completeOverlay">
+    <div class="complete-medal">🏅</div>
+    <div class="complete-title">ミッション達成！</div>
+    <div class="complete-sub">今日の10フレーズをすべてクリア！<br>明日も続けよう 🔥</div>
+    <button class="btn btn-accent" style="max-width:240px" onclick="closeComplete()">つづける</button>
+  </div>
 
-<!-- Update banner -->
-<div class="update-bar" id="updateBar" onclick="location.reload()">
-  🔄 新しいバージョンがあります。タップして更新
-</div>
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+</div><!-- /app -->
+
 
 <script>
-/* ═══════════════════════════════════
+/* ════════════════════════════════════════
+   APP STATE
+   ════════════════════════════════════════ */
+const KEY = {
+  progress : 'tg_progress',
+  history  : 'tg_history',
+  settings : 'tg_settings',
+  stats    : 'tg_stats',
+};
+
+let state = {
+  scene      : 'greeting',
+  currentPhrase : null,
+  inputText  : '',
+  resultEn   : '',
+  resultJp   : '',
+  progress   : 0,          // today's completed phrases
+  dailyGoal  : 10,
+};
+
+let settings = {
+  showJp    : true,
+  autoSpeak : false,
+  showScore : true,
+  dailyGoal : 10,
+  level     : 'beginner',
+  character : 'emma',
+};
+
+let stats = { total: 0, days: 0, scores: [] };
+let history = [];
+let deferredInstall = null;
+
+/* ════════════════════════════════════════
    DATA
-═══════════════════════════════════ */
+   ════════════════════════════════════════ */
 const SCENES = [
-  {id:'greeting', l:'あいさつ',    i:'👋'},
-  {id:'cafe',     l:'カフェ',      i:'☕'},
-  {id:'shopping', l:'買い物',      i:'🛍️'},
-  {id:'direction',l:'道案内',      i:'🗺️'},
-  {id:'hotel',    l:'ホテル',      i:'🏨'},
-  {id:'intro',    l:'自己紹介',    i:'😊'},
-  {id:'food',     l:'レストラン',  i:'🍽️'},
-  {id:'transport',l:'交通',        i:'🚌'},
+  { id:'greeting', label:'あいさつ',   icon:'👋' },
+  { id:'cafe',     label:'カフェ',     icon:'☕' },
+  { id:'shopping', label:'買い物',     icon:'🛍️' },
+  { id:'direction',label:'道案内',     icon:'🗺️' },
+  { id:'hotel',    label:'ホテル',     icon:'🏨' },
+  { id:'intro',    label:'自己紹介',   icon:'😊' },
+  { id:'food',     label:'レストラン', icon:'🍽️' },
+  { id:'transport',label:'交通',       icon:'🚌' },
 ];
 
 const PHRASES = {
-  greeting:[
-    {jp:'こんにちは',en:'Hello!',i:'👋'},
-    {jp:'おはようございます',en:'Good morning!',i:'🌅'},
-    {jp:'ありがとう',en:'Thank you!',i:'🙏'},
-    {jp:'すみません',en:'Excuse me.',i:'🤚'},
-    {jp:'はい',en:'Yes.',i:'✅'},
-    {jp:'いいえ',en:'No.',i:'❌'},
-    {jp:'お願いします',en:'Please.',i:'🙂'},
-    {jp:'どういたしまして',en:"You're welcome.",i:'😊'},
-    {jp:'わかりません',en:"I don't understand.",i:'🤷'},
-    {jp:'もう一度言ってください',en:'Could you say that again?',i:'🔁'},
+  greeting : [
+    { jp:'こんにちは', en:'Hello!', icon:'👋' },
+    { jp:'おはようございます', en:'Good morning!', icon:'🌅' },
+    { jp:'ありがとう', en:'Thank you!', icon:'🙏' },
+    { jp:'すみません', en:'Excuse me.', icon:'🤚' },
+    { jp:'はい', en:'Yes.', icon:'✅' },
+    { jp:'いいえ', en:'No.', icon:'❌' },
+    { jp:'お願いします', en:'Please.', icon:'🙂' },
+    { jp:'どういたしまして', en:"You're welcome.", icon:'😊' },
+    { jp:'わかりません', en:"I don't understand.", icon:'🤷' },
+    { jp:'英語が話せません', en:"I don't speak English well.", icon:'💬' },
   ],
-  cafe:[
-    {jp:'コーヒーを一杯ください',en:'One coffee, please.',i:'☕'},
-    {jp:'水をください',en:'Could I have some water?',i:'💧'},
-    {jp:'おすすめは何ですか',en:"What do you recommend?",i:'⭐'},
-    {jp:'これはいくらですか',en:'How much is this?',i:'💰'},
-    {jp:'持ち帰りで',en:'To go, please.',i:'🥤'},
-    {jp:'砂糖なしで',en:'No sugar, please.',i:'🚫'},
-    {jp:'ミルクを多めに',en:'Extra milk, please.',i:'🥛'},
-    {jp:'レシートをください',en:'Can I have a receipt?',i:'🧾'},
-    {jp:'席はありますか',en:'Is there a table available?',i:'🪑'},
-    {jp:'カフェインなしで',en:'Decaf, please.',i:'🍵'},
+  cafe : [
+    { jp:'コーヒーを一杯ください', en:'One coffee, please.', icon:'☕' },
+    { jp:'水をください', en:'Could I have some water, please?', icon:'💧' },
+    { jp:'おすすめは何ですか', en:"What do you recommend?", icon:'⭐' },
+    { jp:'これはいくらですか', en:'How much is this?', icon:'💰' },
+    { jp:'持ち帰りで', en:'To go, please.', icon:'🥤' },
+    { jp:'カフェインなしで', en:'Decaf, please.', icon:'🍵' },
+    { jp:'砂糖なしで', en:'No sugar, please.', icon:'🚫' },
+    { jp:'ミルクを多めに', en:'Extra milk, please.', icon:'🥛' },
+    { jp:'レシートをください', en:'Can I have a receipt?', icon:'🧾' },
+    { jp:'席はありますか', en:'Is there a table available?', icon:'🪑' },
   ],
-  shopping:[
-    {jp:'これはいくらですか',en:'How much does this cost?',i:'💰'},
-    {jp:'試着できますか',en:'Can I try this on?',i:'👕'},
-    {jp:'別の色はありますか',en:'Do you have another color?',i:'🎨'},
-    {jp:'クレジットカードで払えますか',en:'Do you accept credit cards?',i:'💳'},
-    {jp:'返品できますか',en:'Can I return this?',i:'↩️'},
-    {jp:'袋に入れてください',en:'Could you bag this?',i:'🛍️'},
-    {jp:'ギフト用にしてください',en:'Could you gift-wrap this?',i:'🎁'},
-    {jp:'セール中ですか',en:'Is this on sale?',i:'🏷️'},
-    {jp:'これをください',en:"I'll take this, please.",i:'✅'},
-    {jp:'サイズはありますか',en:'Do you have my size?',i:'📏'},
+  shopping : [
+    { jp:'これはいくらですか', en:'How much does this cost?', icon:'💰' },
+    { jp:'試着できますか', en:'Can I try this on?', icon:'👕' },
+    { jp:'サイズはありますか', en:'Do you have this in my size?', icon:'📏' },
+    { jp:'別の色はありますか', en:'Do you have this in another color?', icon:'🎨' },
+    { jp:'クレジットカードで払えますか', en:'Do you accept credit cards?', icon:'💳' },
+    { jp:'返品できますか', en:'Can I return this?', icon:'↩️' },
+    { jp:'袋に入れてください', en:'Could you bag this for me?', icon:'🛍️' },
+    { jp:'ギフト用にしてください', en:'This is a gift, please wrap it.', icon:'🎁' },
+    { jp:'セール中ですか', en:'Is this on sale?', icon:'🏷️' },
+    { jp:'これをください', en:"I'll take this, please.", icon:'✅' },
   ],
-  direction:[
-    {jp:'駅はどこですか',en:'Where is the station?',i:'🚉'},
-    {jp:'トイレはどこですか',en:'Where is the restroom?',i:'🚻'},
-    {jp:'歩いて行けますか',en:'Can I walk there?',i:'🚶'},
-    {jp:'地図で教えてください',en:'Could you show me on the map?',i:'🗺️'},
-    {jp:'右に曲がって',en:'Turn right.',i:'➡️'},
-    {jp:'左に曲がって',en:'Turn left.',i:'⬅️'},
-    {jp:'まっすぐ進んで',en:'Go straight ahead.',i:'⬆️'},
-    {jp:'タクシーを呼んでください',en:'Could you call a taxi?',i:'🚕'},
-    {jp:'バス停はどこですか',en:'Where is the bus stop?',i:'🚌'},
-    {jp:'迷子になりました',en:"I'm lost.",i:'😕'},
+  direction : [
+    { jp:'駅はどこですか', en:'Where is the station?', icon:'🚉' },
+    { jp:'トイレはどこですか', en:'Where is the restroom?', icon:'🚻' },
+    { jp:'ここまで歩いて行けますか', en:'Can I walk there from here?', icon:'🚶' },
+    { jp:'地図で教えてください', en:'Could you show me on the map?', icon:'🗺️' },
+    { jp:'右に曲がってください', en:'Turn right.', icon:'➡️' },
+    { jp:'左に曲がってください', en:'Turn left.', icon:'⬅️' },
+    { jp:'まっすぐ進んでください', en:'Go straight ahead.', icon:'⬆️' },
+    { jp:'タクシーを呼んでください', en:'Could you call a taxi?', icon:'🚕' },
+    { jp:'バス停はどこですか', en:'Where is the bus stop?', icon:'🚌' },
+    { jp:'迷子になりました', en:"I'm lost.", icon:'😕' },
   ],
-  hotel:[
-    {jp:'チェックインしたいです',en:"I'd like to check in.",i:'🏨'},
-    {jp:'予約があります',en:'I have a reservation.',i:'📋'},
-    {jp:'Wi-Fiのパスワードは',en:"What's the Wi-Fi password?",i:'📶'},
-    {jp:'タオルをもっとください',en:'Could I have more towels?',i:'🛁'},
-    {jp:'荷物を預かってもらえますか',en:'Can you hold my luggage?',i:'🧳'},
-    {jp:'朝食は何時ですか',en:'What time is breakfast?',i:'🌅'},
-    {jp:'チェックアウトは何時',en:'What time is check-out?',i:'⏰'},
-    {jp:'部屋を掃除してください',en:'Please clean my room.',i:'🧹'},
-    {jp:'もう一泊したいです',en:"I'd like to stay one more night.",i:'🌙'},
-    {jp:'ルームサービスをお願いします',en:'Could I have room service?',i:'🍽️'},
+  hotel : [
+    { jp:'チェックインしたいです', en:"I'd like to check in.", icon:'🏨' },
+    { jp:'予約があります', en:'I have a reservation.', icon:'📋' },
+    { jp:'ルームサービスをお願いします', en:'Could I have room service?', icon:'🍽️' },
+    { jp:'タオルをもっとください', en:'Could I have more towels?', icon:'🛁' },
+    { jp:'Wi-Fiのパスワードは何ですか', en:"What's the Wi-Fi password?", icon:'📶' },
+    { jp:'荷物を預かってもらえますか', en:'Can you hold my luggage?', icon:'🧳' },
+    { jp:'朝食は何時ですか', en:'What time is breakfast?', icon:'🌅' },
+    { jp:'チェックアウトは何時ですか', en:'What time is check-out?', icon:'⏰' },
+    { jp:'部屋を掃除してください', en:'Please clean my room.', icon:'🧹' },
+    { jp:'もう一泊したいです', en:"I'd like to stay one more night.", icon:'🌙' },
   ],
-  intro:[
-    {jp:'はじめまして',en:'Nice to meet you.',i:'👋'},
-    {jp:'私は日本人です',en:"I'm Japanese.",i:'🇯🇵'},
-    {jp:'観光で来ました',en:"I'm here as a tourist.",i:'📷'},
-    {jp:'日本から来ました',en:"I'm from Japan.",i:'✈️'},
-    {jp:'英語が得意ではありません',en:"I'm not very good at English.",i:'😅'},
-    {jp:'もう少しゆっくり話してください',en:'Could you speak more slowly?',i:'🐢'},
-    {jp:'もう一度言ってください',en:'Could you say that again?',i:'🔁'},
-    {jp:'わかりました',en:'I understand.',i:'💡'},
-    {jp:'よろしくお願いします',en:"Nice to meet you. I look forward to it.",i:'🤝'},
-    {jp:'また会いましょう',en:'See you again!',i:'😊'},
+  intro : [
+    { jp:'はじめまして', en:'Nice to meet you.', icon:'👋' },
+    { jp:'私は日本人です', en:"I'm Japanese.", icon:'🇯🇵' },
+    { jp:'観光で来ました', en:"I'm here as a tourist.", icon:'📷' },
+    { jp:'日本から来ました', en:"I'm from Japan.", icon:'✈️' },
+    { jp:'英語が得意ではありません', en:"I'm not very good at English.", icon:'😅' },
+    { jp:'もう少しゆっくり話してください', en:'Could you speak more slowly?', icon:'🐢' },
+    { jp:'もう一度言ってください', en:'Could you say that again?', icon:'🔁' },
+    { jp:'わかりました', en:'I understand.', icon:'💡' },
+    { jp:'よろしくお願いします', en:"I look forward to working with you.", icon:'🤝' },
+    { jp:'また会いましょう', en:'See you again!', icon:'😊' },
   ],
-  food:[
-    {jp:'メニューをください',en:'Could I see the menu?',i:'📋'},
-    {jp:'これをください',en:"I'll have this, please.",i:'👆'},
-    {jp:'アレルギーがあります',en:'I have a food allergy.',i:'⚠️'},
-    {jp:'ベジタリアンです',en:"I'm vegetarian.",i:'🥗'},
-    {jp:'辛いのが苦手です',en:"I can't eat spicy food.",i:'🌶️'},
-    {jp:'おいしいです',en:'This is delicious!',i:'😋'},
-    {jp:'お会計をください',en:'Check, please.',i:'💳'},
-    {jp:'一緒にお会計で',en:'All together, please.',i:'🤝'},
-    {jp:'別々にお会計で',en:'Separate checks, please.',i:'➗'},
-    {jp:'おかわりをください',en:'Could I have a refill?',i:'🔄'},
+  food : [
+    { jp:'メニューをください', en:'Could I see the menu?', icon:'📋' },
+    { jp:'これをください', en:"I'll have this, please.", icon:'👆' },
+    { jp:'アレルギーがあります', en:'I have a food allergy.', icon:'⚠️' },
+    { jp:'ベジタリアンです', en:"I'm vegetarian.", icon:'🥗' },
+    { jp:'辛いのが苦手です', en:"I can't eat spicy food.", icon:'🌶️' },
+    { jp:'おいしいです', en:'This is delicious!', icon:'😋' },
+    { jp:'お会計をください', en:'Check, please.', icon:'💳' },
+    { jp:'一緒にお会計で', en:'All together, please.', icon:'🤝' },
+    { jp:'別々にお会計で', en:'Separate checks, please.', icon:'➗' },
+    { jp:'おかわりをください', en:'Could I have a refill?', icon:'🔄' },
   ],
-  transport:[
-    {jp:'〜まで1枚ください',en:'One ticket to … please.',i:'🎫'},
-    {jp:'終電は何時ですか',en:'What time is the last train?',i:'🚂'},
-    {jp:'ここに止まりますか',en:'Does this stop here?',i:'🛑'},
-    {jp:'乗り換えが必要ですか',en:'Do I need to transfer?',i:'🔄'},
-    {jp:'空港まで行きたいです',en:'I want to go to the airport.',i:'✈️'},
-    {jp:'何番線ですか',en:'Which platform?',i:'🚉'},
-    {jp:'遅れていますか',en:'Is it delayed?',i:'⏱️'},
-    {jp:'どこで降りますか',en:'Where do I get off?',i:'📍'},
-    {jp:'往復で',en:'Round trip, please.',i:'🔁'},
-    {jp:'学割はありますか',en:'Is there a student discount?',i:'🎓'},
-  ],
-};
-
-const REPLIES = {
-  greeting:[
-    {en:'Hi there! How can I help you today?',jp:'こんにちは！どうされましたか？'},
-    {en:"Good morning! Have a wonderful day!",jp:'おはようございます！良い一日を！'},
-  ],
-  cafe:[
-    {en:"Of course! Anything else?",jp:'かしこまりました！他には？'},
-    {en:"Coming right up! That'll be $4.50.",jp:'すぐに！4ドル50セントです。'},
-  ],
-  shopping:[
-    {en:"Sure! Let me check that for you.",jp:'確認してまいります。'},
-    {en:"We have it in sizes S, M, and L.",jp:'S・M・Lサイズがございます。'},
-  ],
-  direction:[
-    {en:"It's two blocks down on the left.",jp:'左側に2ブロック進むとあります。'},
-    {en:"I'll show you on the map!",jp:'地図でお見せします！'},
-  ],
-  hotel:[
-    {en:"Welcome! May I see your passport?",jp:'いらっしゃいませ！パスポートをご提示ください。'},
-    {en:"The Wi-Fi password is on your key card.",jp:'パスワードはカードに記載されています。'},
-  ],
-  intro:[
-    {en:'Nice to meet you too! Welcome!',jp:'こちらこそ！ようこそ！'},
-    {en:"No problem! I'll speak slowly for you.",jp:'大丈夫！ゆっくり話しますね。'},
-  ],
-  food:[
-    {en:"Great choice! I'll put that in for you.",jp:'素晴らしい選択です！ご注文を通します。'},
-    {en:"Here's your check. Thank you!",jp:'お会計です。ありがとうございました！'},
-  ],
-  transport:[
-    {en:"Platform 3. Next train in 5 minutes.",jp:'3番ホーム。次の電車は5分後です。'},
-    {en:"Yes, transfer at Central Station.",jp:'はい、セントラル駅で乗り換えです。'},
+  transport : [
+    { jp:'〜まで1枚ください', en:'One ticket to ... please.', icon:'🎫' },
+    { jp:'終電は何時ですか', en:'What time is the last train?', icon:'🚂' },
+    { jp:'ここに止まりますか', en:'Does this stop here?', icon:'🛑' },
+    { jp:'乗り換えが必要ですか', en:'Do I need to transfer?', icon:'🔄' },
+    { jp:'空港まで行きたいです', en:'I want to go to the airport.', icon:'✈️' },
+    { jp:'何番線ですか', en:'Which platform?', icon:'🚉' },
+    { jp:'遅れていますか', en:'Is it delayed?', icon:'⏱️' },
+    { jp:'降り場はどこですか', en:'Where do I get off?', icon:'📍' },
+    { jp:'往復で', en:'Round trip, please.', icon:'🔁' },
+    { jp:'学割はありますか', en:'Is there a student discount?', icon:'🎓' },
   ],
 };
 
-const CHARS = [
-  {id:'emma', n:'Emma', r:'カフェ店員',    av:'👩‍💼', v:'en-US'},
-  {id:'jake', n:'Jake', r:'ホテルスタッフ', av:'👨‍💼', v:'en-US'},
-  {id:'mia',  n:'Mia',  r:'観光ガイド',   av:'👩‍🦰', v:'en-GB'},
+const CHARACTERS = [
+  { id:'emma',  name:'Emma',  role:'カフェ店員',  avatar:'👩‍💼', voice: 'en-US' },
+  { id:'jake',  name:'Jake',  role:'ホテルスタッフ', avatar:'👨‍💼', voice: 'en-US' },
+  { id:'mia',   name:'Mia',   role:'観光ガイド',  avatar:'👩‍🦰', voice: 'en-GB' },
 ];
 
-/* ═══════════════════════════════════
-   STATE
-═══════════════════════════════════ */
-let ST = {
-  scene   : 'greeting',
-  input   : '',
-  resultEn: '',
-  progress: 0,
-  phraseI : 0,
+const PARTNER_REPLIES = {
+  greeting : [
+    { en:'Hi there! How can I help you today?', jp:'こんにちは！今日はどうされましたか？' },
+    { en:"Good morning! It's a beautiful day, isn't it?", jp:'おはようございます！いい天気ですね。' },
+  ],
+  cafe : [
+    { en:"Of course! Would you like anything else?", jp:'かしこまりました！他に何かご注文は？' },
+    { en:"Coming right up! That'll be $4.50.", jp:'すぐにお持ちします！4ドル50セントです。' },
+  ],
+  shopping : [
+    { en:"Sure! Let me check that for you.", jp:'もちろんです！確認してまいります。' },
+    { en:"We have it in sizes S, M, and L.", jp:'S・M・Lサイズがございます。' },
+  ],
+  direction : [
+    { en:"It's just two blocks down on the left.", jp:'左側に2ブロック進むとあります。' },
+    { en:"Sure! I'll show you on the map.", jp:'もちろん！地図でお見せします。' },
+  ],
+  hotel : [
+    { en:"Welcome! May I see your passport, please?", jp:'いらっしゃいませ！パスポートをご提示ください。' },
+    { en:"The password is on the card in your room.", jp:'パスワードはお部屋のカードに書いてあります。' },
+  ],
+  intro : [
+    { en:'Nice to meet you too! Welcome to our city!', jp:'こちらこそ！ようこそ！' },
+    { en:"No problem! I'll speak slowly.", jp:'大丈夫ですよ！ゆっくり話しますね。' },
+  ],
+  food : [
+    { en:"Great choice! I'll put that order in for you.", jp:'素晴らしい選択です！ご注文を通します。' },
+    { en:"Here's your check. Thank you for dining with us!", jp:'お会計です。ありがとうございました！' },
+  ],
+  transport : [
+    { en:"Platform 3, and the next train leaves in 5 minutes.", jp:'3番ホームで、次の電車は5分後です。' },
+    { en:"Yes, you need to transfer at Central Station.", jp:'はい、セントラル駅で乗り換えが必要です。' },
+  ],
 };
-let CFG = {
-  showJp   : true,
-  autoSpeak: false,
-  showScore: true,
-  goal     : 10,
-  level    : 'beginner',
-  char     : 'emma',
-};
-let STATS = { total:0, days:0, streak:1, lastDate:'', scores:[] };
-let HIST  = [];
 
-/* ═══════════════════════════════════
-   STORAGE
-═══════════════════════════════════ */
-const LS = {
-  get(k) { try { return JSON.parse(localStorage.getItem('tg_'+k)); } catch{return null;} },
-  set(k,v){ try { localStorage.setItem('tg_'+k, JSON.stringify(v)); } catch{} },
-};
-
-function loadAll() {
-  const c = LS.get('cfg');   if(c) CFG   = {...CFG,...c};
-  const s = LS.get('stats'); if(s) STATS = {...STATS,...s};
-  const h = LS.get('hist');  if(h) HIST  = h;
-  const p = LS.get('prog');
-  if(p) {
-    const today = new Date().toDateString();
-    ST.progress = p.date===today ? p.count : 0;
-    // Update streak
-    if(p.date !== today) {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate()-1);
-      if(p.date === yesterday.toDateString()) {
-        STATS.streak = (STATS.streak||1) + 1;
-      } else {
-        STATS.streak = 1;
-      }
-      STATS.days = (STATS.days||0) + (ST.progress > 0 ? 1 : 0);
+/* ════════════════════════════════════════
+   LOAD / SAVE
+   ════════════════════════════════════════ */
+function load() {
+  try {
+    const s = localStorage.getItem(KEY.settings);
+    if (s) settings = { ...settings, ...JSON.parse(s) };
+    const h = localStorage.getItem(KEY.history);
+    if (h) history = JSON.parse(h);
+    const st = localStorage.getItem(KEY.stats);
+    if (st) stats = { ...stats, ...JSON.parse(st) };
+    const pr = localStorage.getItem(KEY.progress);
+    if (pr) {
+      const p = JSON.parse(pr);
+      const today = new Date().toDateString();
+      state.progress = p.date === today ? p.count : 0;
     }
-  }
+  } catch(e) {}
 }
 
-function saveAll() {
-  LS.set('cfg',   CFG);
-  LS.set('stats', STATS);
-  LS.set('hist',  HIST);
-  LS.set('prog',  {date: new Date().toDateString(), count: ST.progress});
+function save() {
+  try {
+    localStorage.setItem(KEY.settings, JSON.stringify(settings));
+    localStorage.setItem(KEY.history,  JSON.stringify(history));
+    localStorage.setItem(KEY.stats,    JSON.stringify(stats));
+    localStorage.setItem(KEY.progress, JSON.stringify({
+      date: new Date().toDateString(),
+      count: state.progress,
+    }));
+  } catch(e) {}
 }
 
-/* ═══════════════════════════════════
+/* ════════════════════════════════════════
    NAVIGATION
-═══════════════════════════════════ */
-function nav(id) {
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('scr-'+id).classList.add('active');
-  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.toggle('active',b.dataset.s===id));
-  if(id==='history')  renderHistory();
-  if(id==='settings') renderSettings();
+   ════════════════════════════════════════ */
+function navigate(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${screenId}`).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === screenId);
+  });
+  if (screenId === 'history')  renderHistory();
+  if (screenId === 'settings') renderSettings();
 }
 
-/* ═══════════════════════════════════
+/* ════════════════════════════════════════
    SCENE TABS
-═══════════════════════════════════ */
-function buildTabs(containerId, callback) {
+   ════════════════════════════════════════ */
+function buildSceneTabs(containerId, onChange) {
   const el = document.getElementById(containerId);
   el.innerHTML = '';
   SCENES.forEach(sc => {
-    const b = document.createElement('button');
-    b.className = `tag ${sc.id===ST.scene?'tag-on':'tag-off'}`;
-    b.textContent = `${sc.i} ${sc.l}`;
-    b.onclick = () => {
-      ST.scene = sc.id;
-      // sync all tab bars
-      ['hScenes','pScenes'].forEach(cid => {
-        document.querySelectorAll(`#${cid} .tag`).forEach(t => {
-          const active = SCENES.find(s=>t.textContent.includes(s.l))?.id === sc.id;
-          t.className = `tag ${active?'tag-on':'tag-off'}`;
-        });
+    const btn = document.createElement('button');
+    btn.className = `tag ${sc.id === state.scene ? 'tag-active' : 'tag-default'}`;
+    btn.textContent = `${sc.icon} ${sc.label}`;
+    btn.onclick = () => {
+      state.scene = sc.id;
+      document.querySelectorAll(`#${containerId} .tag`).forEach(t => {
+        t.className = `tag ${t.textContent.includes(sc.label) ? 'tag-active' : 'tag-default'}`;
       });
-      document.getElementById('hBadge').textContent = `${sc.i} ${sc.l}`;
-      if(callback) callback();
+      // Sync other tab bar
+      ['sceneTabs','sceneTabsPrac'].forEach(id => {
+        if (id !== containerId) {
+          document.querySelectorAll(`#${id} .tag`).forEach(t => {
+            const active = SCENES.find(s => t.textContent.includes(s.label))?.id === sc.id;
+            t.className = `tag ${active ? 'tag-active' : 'tag-default'}`;
+          });
+        }
+      });
+      document.getElementById('homeBadge').textContent = `${sc.icon} ${sc.label}`;
+      if (onChange) onChange(sc.id);
     };
-    el.appendChild(b);
+    el.appendChild(btn);
   });
 }
 
-/* ═══════════════════════════════════
-   HOME
-═══════════════════════════════════ */
+/* ════════════════════════════════════════
+   HOME SCREEN
+   ════════════════════════════════════════ */
+let phraseIndex = 0;
+
 function renderHome() {
-  const goal = CFG.goal;
-  // progress
-  document.getElementById('homeCnt').textContent = `${ST.progress} / ${goal}`;
-  document.getElementById('homeFill').style.width = `${(ST.progress/goal)*100}%`;
-  // dots
-  const dotEl = document.getElementById('homeDots');
-  dotEl.innerHTML = '';
-  for(let i=0;i<goal;i++){
+  // Mission progress dots
+  const dots = document.getElementById('progDots');
+  dots.innerHTML = '';
+  const goal = settings.dailyGoal;
+  for (let i = 0; i < goal; i++) {
     const d = document.createElement('div');
-    d.className = `pdot${i<ST.progress?' done':''}`;
-    dotEl.appendChild(d);
+    d.className = `prog-dot${i < state.progress ? ' done' : ''}`;
+    dots.appendChild(d);
   }
-  // streak
-  document.getElementById('streakN').innerHTML = `${STATS.streak||1}<span>日連続</span>`;
-  // stats
-  document.getElementById('stTotal').textContent = STATS.total;
-  document.getElementById('stDays').textContent  = STATS.days;
-  document.getElementById('stScore').textContent = STATS.scores.length
-    ? Math.round(STATS.scores.reduce((a,b)=>a+b,0)/STATS.scores.length) : '—';
-  // quick phrases
-  buildQuickGrid('hQuick', 4, p => { nav('practice'); pickPhrase(p); });
-  showFeatured();
-}
+  document.getElementById('missionCountHome').textContent = `${state.progress} / ${goal}`;
+  document.getElementById('progFillHome').style.width = `${(state.progress / goal) * 100}%`;
 
-let _featI = 0;
-function showFeatured() {
-  const list = PHRASES[ST.scene]||PHRASES.greeting;
-  const p = list[_featI % list.length];
-  document.getElementById('phEn').textContent = p.en;
-  document.getElementById('phJp').textContent = p.jp;
-}
-function nextFeatured()  { _featI++; showFeatured(); }
-function playFeatured()  {
-  const list = PHRASES[ST.scene]||PHRASES.greeting;
-  tts((list[_featI%list.length]).en);
-}
+  // Stats
+  document.getElementById('statPhrases').textContent = stats.total;
+  document.getElementById('statDays').textContent = stats.days;
+  document.getElementById('statScore').textContent = stats.scores.length
+    ? Math.round(stats.scores.reduce((a,b)=>a+b,0)/stats.scores.length)
+    : '—';
 
-function buildQuickGrid(id, count, onClick) {
-  const list = (PHRASES[ST.scene]||PHRASES.greeting).slice(0,count);
-  const g = document.getElementById(id);
-  g.innerHTML = '';
-  list.forEach(p => {
-    const d = document.createElement('div');
-    d.className = 'qi';
-    d.innerHTML = `<div class="qi-icon">${p.i}</div><div class="qi-jp">${p.jp}</div><div class="qi-en">${p.en}</div>`;
-    d.onclick = () => onClick(p);
-    g.appendChild(d);
+  // Streak
+  document.getElementById('streakDays').innerHTML = `${stats.days || 1}<span>日連続</span>`;
+
+  // Quick phrases (4 samples)
+  const phrases = (PHRASES[state.scene] || PHRASES.greeting).slice(0, 4);
+  const grid = document.getElementById('quickGrid');
+  grid.innerHTML = '';
+  phrases.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'quick-item';
+    div.innerHTML = `<div class="quick-icon">${p.icon}</div>
+      <div class="quick-jp">${p.jp}</div>
+      <div class="quick-en">${p.en}</div>`;
+    div.onclick = () => { navigate('practice'); selectPhrase(p); };
+    grid.appendChild(div);
   });
+
+  showCurrentPhrase();
 }
 
-/* ═══════════════════════════════════
-   PRACTICE
-═══════════════════════════════════ */
-function pickPhrase(p) {
-  ST.input = p.jp;
-  const el = document.getElementById('micTxt');
-  el.textContent = `📝 選択: ${p.jp}`;
-  el.className = 'mic-txt has';
+function showCurrentPhrase() {
+  const list = PHRASES[state.scene] || PHRASES.greeting;
+  const p = list[phraseIndex % list.length];
+  state.currentPhrase = p;
+  document.getElementById('phraseEn').textContent = p.en;
+  document.getElementById('phraseJp').textContent = p.jp;
+}
+
+function nextPhrase() {
+  phraseIndex++;
+  showCurrentPhrase();
+}
+
+function speakPhrase() {
+  const p = state.currentPhrase;
+  if (p) tts(p.en);
+}
+
+/* ════════════════════════════════════════
+   PRACTICE SCREEN
+   ════════════════════════════════════════ */
+function selectPhrase(p) {
+  state.inputText = p.jp;
+  document.getElementById('micText').textContent = `📝 選択: ${p.jp}`;
+  document.getElementById('micText').className = 'mic-text has-input';
 }
 
 function toggleMic() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR) { toast('このブラウザは音声認識に対応していません'); return; }
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showToast('このブラウザは音声認識に対応していません');
+    return;
+  }
   const btn = document.getElementById('micBtn');
-  const r = new SR();
-  r.lang = 'ja-JP'; r.interimResults = false;
-  r.onstart  = () => btn.classList.add('on');
-  r.onresult = e => {
-    const txt = e.results[0][0].transcript;
-    ST.input = txt;
-    document.getElementById('micTxt').textContent = `🎤 "${txt}"`;
-    document.getElementById('micTxt').className = 'mic-txt has';
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SpeechRecognition();
+  rec.lang = 'ja-JP';
+  rec.interimResults = false;
+  rec.onstart = () => btn.classList.add('listening');
+  rec.onresult = e => {
+    const text = e.results[0][0].transcript;
+    state.inputText = text;
+    document.getElementById('micText').textContent = `🎤 "${text}"`;
+    document.getElementById('micText').className = 'mic-text has-input';
   };
-  r.onend    = () => btn.classList.remove('on');
-  r.onerror  = () => { btn.classList.remove('on'); toast('音声認識に失敗しました'); };
-  r.start();
+  rec.onend  = () => btn.classList.remove('listening');
+  rec.onerror = () => { btn.classList.remove('listening'); showToast('音声認識に失敗しました'); };
+  rec.start();
 }
 
 async function doTranslate() {
-  if(!ST.input) { toast('フレーズを選ぶかマイクで話してください'); return; }
-  const btn = document.getElementById('transBtn');
-  btn.innerHTML = '<div class="spin"></div> 変換中…';
+  const text = state.inputText;
+  if (!text) { showToast('フレーズを選ぶかマイクで話してください'); return; }
+
+  const btn = document.getElementById('translateBtn');
+  btn.innerHTML = '<div class="spinner"></div> 変換中…';
   btn.disabled = true;
 
   try {
-    const en = await aiTranslate(ST.input);
-    ST.resultEn = en;
+    const en = await translateWithAI(text);
+    state.resultEn = en;
+    state.resultJp = text;
 
-    document.getElementById('resEn').textContent = en;
-    document.getElementById('resJp').textContent = CFG.showJp ? `日本語: ${ST.input}` : '';
-    document.getElementById('resBox').style.display = 'block';
-    document.getElementById('partnerSec').style.display = 'none';
+    document.getElementById('resultEn').textContent = en;
+    document.getElementById('resultJp').textContent = settings.showJp ? `日本語: ${text}` : '';
+    document.getElementById('resultArea').style.display = 'block';
+    document.getElementById('partnerSection').style.display = 'none';
 
-    const char = CHARS.find(c=>c.id===CFG.char)||CHARS[0];
-    document.getElementById('partnerWho').textContent = `${char.av} ${char.n} の返答`;
+    // Auto speak
+    if (settings.autoSpeak) tts(en);
 
-    if(CFG.autoSpeak) tts(en);
-    if(CFG.showScore) showScore();
+    // Pronunciation score (simulated)
+    if (settings.showScore) showScore();
 
-    addProgress();
+    // Update progress
+    incrementProgress();
+
+    // Update partner who label
+    const char = CHARACTERS.find(c => c.id === settings.character) || CHARACTERS[0];
+    document.getElementById('partnerWho').textContent = `${char.avatar} ${char.name} の返答`;
+
   } catch(e) {
-    toast('翻訳に失敗しました。もう一度お試しください。');
+    showToast('翻訳に失敗しました。もう一度お試しください。');
   }
 
   btn.innerHTML = '<span>✨</span> 英語に変換する';
   btn.disabled = false;
 }
 
-async function aiTranslate(jp) {
-  // Check known phrases first (instant + offline)
-  const known = (PHRASES[ST.scene]||[]).find(p=>p.jp===jp);
-  if(known) return known.en;
+async function translateWithAI(japaneseText) {
+  const scene = SCENES.find(s => s.id === state.scene);
+  const sceneName = scene ? scene.label : '一般';
 
-  const scene = SCENES.find(s=>s.id===ST.scene);
-  const res = await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
+  // Check if it matches a known phrase first
+  const phrases = PHRASES[state.scene] || [];
+  const known = phrases.find(p => p.jp === japaneseText || p.en === japaneseText);
+  if (known) return known.en;
+
+  // Call Anthropic API
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model:'claude-sonnet-4-6',
-      max_tokens:150,
-      messages:[{
-        role:'user',
-        content:`シーン「${scene?.l||'旅行'}」で使う自然な旅行英会話として次の日本語を英語1文に翻訳してください。英語のみ返してください。\n日本語: ${jp}`,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 200,
+      messages: [{
+        role: 'user',
+        content: `シーン: ${sceneName}。次の日本語を自然な旅行英会話の英語1文に翻訳してください。英語のみ答えてください。日本語: ${japaneseText}`,
       }],
     }),
   });
-  const data = await res.json();
-  const txt = data.content?.map(b=>b.text||'').join('').trim();
-  if(!txt) throw new Error('empty');
-  return txt;
+  const data = await resp.json();
+  const txt = data.content?.map(b => b.text || '').join('').trim();
+  return txt || japaneseText;
 }
 
-function playResult()  { if(ST.resultEn) tts(ST.resultEn); }
-
-function do3repeat() {
-  if(!ST.resultEn) return;
-  let n=0;
-  const iv = setInterval(()=>{ tts(ST.resultEn); if(++n>=3) clearInterval(iv); },2200);
-  toast('3回リピート開始！');
+function speakResult() {
+  if (state.resultEn) tts(state.resultEn);
 }
 
-async function getReply() {
-  const sec = document.getElementById('partnerSec');
-  const dots= document.getElementById('tdots');
-  const en  = document.getElementById('partnerEnTxt');
-  const jp  = document.getElementById('partnerJpTxt');
-  sec.style.display='block'; dots.style.display='flex';
-  en.textContent=''; jp.textContent='';
+function repeatPractice() {
+  if (!state.resultEn) return;
+  let count = 0;
+  const interval = setInterval(() => {
+    tts(state.resultEn);
+    count++;
+    if (count >= 3) clearInterval(interval);
+  }, 2000);
+  showToast('3回リピート開始！');
+}
+
+async function getPartnerReply() {
+  const sec = document.getElementById('partnerSection');
+  const dots = document.getElementById('typingDots');
+  const enEl = document.getElementById('partnerEnText');
+  const jpEl = document.getElementById('partnerJp');
+
+  sec.style.display = 'block';
+  dots.style.display = 'flex';
+  enEl.textContent = '';
+  jpEl.textContent = '';
+
+  // Use pre-defined reply bank first
+  const bank = PARTNER_REPLIES[state.scene] || PARTNER_REPLIES.greeting;
+  const reply = bank[Math.floor(Math.random() * bank.length)];
 
   try {
-    const r = await aiReply(ST.resultEn);
-    dots.style.display='none';
-    en.textContent = r.en;
-    jp.textContent = CFG.showJp ? r.jp : '';
-    tts(r.en);
-  } catch(_) {
-    const bank = REPLIES[ST.scene]||REPLIES.greeting;
-    const r = bank[Math.floor(Math.random()*bank.length)];
-    dots.style.display='none';
-    en.textContent = r.en;
-    jp.textContent = CFG.showJp ? r.jp : '';
-    tts(r.en);
-  }
+    // Try AI-generated reply if we have input
+    if (state.resultEn) {
+      const aiReply = await getAIReply(state.resultEn);
+      dots.style.display = 'none';
+      enEl.textContent = aiReply.en;
+      jpEl.textContent = settings.showJp ? aiReply.jp : '';
+      tts(aiReply.en);
+      return;
+    }
+  } catch(e) {}
+
+  dots.style.display = 'none';
+  enEl.textContent = reply.en;
+  jpEl.textContent = settings.showJp ? reply.jp : '';
+  tts(reply.en);
 }
 
-async function aiReply(userEn) {
-  const char = CHARS.find(c=>c.id===CFG.char)||CHARS[0];
-  const res = await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
+async function getAIReply(userEn) {
+  const char = CHARACTERS.find(c => c.id === settings.character) || CHARACTERS[0];
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model:'claude-sonnet-4-6',
-      max_tokens:200,
-      messages:[{
-        role:'user',
-        content:`You are ${char.n}, a ${char.r}. Reply naturally in English (1-2 sentences) to: "${userEn}"\nThen on a new line: JP: [Japanese translation of your reply]`,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 200,
+      messages: [{
+        role: 'user',
+        content: `You are ${char.name}, a ${char.role}. Respond naturally in English to: "${userEn}". Keep reply to 1-2 sentences. Then on a new line write the Japanese translation starting with "JP:". Format: ENGLISH_REPLY\nJP: JAPANESE_TRANSLATION`,
       }],
     }),
   });
-  const data = await res.json();
-  const text = data.content?.map(b=>b.text||'').join('').trim()||'';
+  const data = await resp.json();
+  const text = data.content?.map(b => b.text || '').join('').trim() || '';
   const lines = text.split('\n');
-  const replyEn = lines[0]||'';
-  const replyJp = (lines.find(l=>l.startsWith('JP:'))||'').replace('JP:','').trim();
-  if(!replyEn) throw new Error('empty');
-  return {en:replyEn, jp:replyJp};
+  const en = lines[0] || reply.en;
+  const jp = (lines.find(l => l.startsWith('JP:')) || '').replace('JP:', '').trim();
+  return { en, jp };
 }
 
 function showScore() {
-  const s = Math.floor(62+Math.random()*37);
+  const score = Math.floor(60 + Math.random() * 40); // 60–99
   const card = document.getElementById('scoreCard');
-  const ring = document.getElementById('ringFg');
-  card.style.display='block';
-  document.getElementById('ringN').textContent=s;
-  ring.style.strokeDashoffset = 188.5*(1-s/100);
-  ring.style.stroke = s>=80?'var(--grn)':s>=65?'var(--amb)':'var(--red)';
-  document.getElementById('ringFb').textContent =
-    s>=85 ? '🎉 素晴らしい発音！' :
-    s>=70 ? '👍 なかなか上手！もう少し練習しよう' :
-            '💪 もう一度練習してみましょう';
-  STATS.scores.push(s);
-  if(STATS.scores.length>100) STATS.scores.shift();
+  const ring = document.getElementById('scoreRing');
+  const num  = document.getElementById('scoreNum');
+  const fb   = document.getElementById('scoreFeedback');
+
+  card.style.display = 'block';
+  num.textContent = score;
+
+  const pct = score / 100;
+  ring.style.strokeDashoffset = 188.5 * (1 - pct);
+  ring.style.stroke = score >= 80 ? 'var(--green)' : score >= 60 ? 'var(--amber)' : 'var(--rose)';
+
+  fb.textContent = score >= 85 ? '🎉 素晴らしい発音です！'
+    : score >= 70 ? '👍 なかなか上手！もう少し練習しよう'
+    : '💪 もう一度練習してみましょう';
+
+  stats.scores.push(score);
+  if (stats.scores.length > 100) stats.scores.shift();
+  save();
 }
 
-function addProgress() {
-  if(ST.progress>=CFG.goal) return;
-  ST.progress++;
-  STATS.total++;
-  if(ST.progress===1) STATS.days++;
+function incrementProgress() {
+  if (state.progress < settings.dailyGoal) {
+    state.progress++;
+    stats.total++;
+    if (state.progress === 1) stats.days++;
 
-  HIST.unshift({
-    en:ST.resultEn, jp:ST.input,
-    scene:ST.scene,
-    score:CFG.showScore?Math.floor(62+Math.random()*37):null,
-    t:Date.now(),
-  });
-  if(HIST.length>300) HIST.pop();
+    // Add to history
+    history.unshift({
+      en   : state.resultEn,
+      jp   : state.resultJp,
+      scene: state.scene,
+      score: settings.showScore ? Math.floor(60 + Math.random() * 40) : null,
+      time : Date.now(),
+    });
+    if (history.length > 200) history.pop();
 
-  saveAll();
-  renderHome();
-  document.getElementById('pBadge').textContent=`${ST.progress} / ${CFG.goal}`;
+    save();
+    renderHome();
+    updatePracBadge();
 
-  if(ST.progress===CFG.goal) {
-    setTimeout(()=>document.getElementById('compOverlay').classList.add('show'),600);
+    if (state.progress === settings.dailyGoal) {
+      setTimeout(() => document.getElementById('completeOverlay').classList.add('show'), 500);
+    }
   }
 }
 
-function closeComp() { document.getElementById('compOverlay').classList.remove('show'); }
+function updatePracBadge() {
+  document.getElementById('pracBadge').textContent = `${state.progress} / ${settings.dailyGoal}`;
+}
 
-/* ═══════════════════════════════════
-   HISTORY
-═══════════════════════════════════ */
+/* ════════════════════════════════════════
+   HISTORY SCREEN
+   ════════════════════════════════════════ */
 function renderHistory() {
-  // Heatmap
+  // Heatmap (90 days)
   const hm = document.getElementById('heatmap');
-  hm.innerHTML='';
-  for(let i=89;i>=0;i--){
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const key=d.toDateString();
-    const cnt=HIST.filter(h=>new Date(h.t).toDateString()===key).length;
-    const cell=document.createElement('div');
-    cell.className=`hcell${cnt>=8?' l3':cnt>=4?' l2':cnt>=1?' l1':''}`;
-    cell.title=`${key}: ${cnt}フレーズ`;
+  hm.innerHTML = '';
+  const activeDays = new Set(history.map(h => new Date(h.time).toDateString()));
+  for (let i = 89; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toDateString();
+    const count = history.filter(h => new Date(h.time).toDateString() === key).length;
+    const cell = document.createElement('div');
+    cell.className = `heatmap-cell${count >= 10 ? ' d3' : count >= 5 ? ' d2' : count >= 1 ? ' d1' : ''}`;
+    cell.title = `${key}: ${count}フレーズ`;
     hm.appendChild(cell);
   }
 
-  // List
-  const list=document.getElementById('histList');
-  list.innerHTML='';
-  if(!HIST.length){
-    list.innerHTML='<div style="text-align:center;color:var(--sub);padding:40px 0;font-size:14px">まだ練習履歴がありません<br>練習画面でフレーズを変換してみよう！</div>';
+  // History list
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  if (!history.length) {
+    list.innerHTML = `<div style="text-align:center;color:var(--muted);padding:40px 0;font-size:14px">まだ練習履歴がありません<br>練習画面で英語を話してみよう！</div>`;
     return;
   }
-
-  let lastDay='';
-  HIST.slice(0,50).forEach(h=>{
-    const day=new Date(h.t).toLocaleDateString('ja-JP',{month:'long',day:'numeric',weekday:'short'});
-    if(day!==lastDay){
-      const dl=document.createElement('div');
-      dl.className='hday'; dl.textContent=day; list.appendChild(dl); lastDay=day;
-    }
-    const sc=SCENES.find(s=>s.id===h.scene);
-    const el=document.createElement('div');
-    el.className='hitem';
-    el.innerHTML=`<div class="hico">${sc?.i||'💬'}</div>
-      <div><div class="hen">${h.en}</div><div class="hjp">${h.jp}</div>
-      <div class="hmeta">
-        <span class="htag htag-s">${sc?.l||'—'}</span>
-        ${h.score?`<span class="htag htag-r">発音 ${h.score}点</span>`:''}
-      </div></div>`;
-    list.appendChild(el);
+  history.slice(0, 30).forEach(h => {
+    const scene = SCENES.find(s => s.id === h.scene);
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    item.innerHTML = `
+      <div class="history-icon">${scene?.icon || '💬'}</div>
+      <div>
+        <div class="history-en">${h.en}</div>
+        <div class="history-jp">${h.jp}</div>
+        <div class="history-meta">
+          <span class="history-tag history-tag-scene">${scene?.label || '—'}</span>
+          ${h.score ? `<span class="history-tag history-tag-score">発音 ${h.score}点</span>` : ''}
+        </div>
+      </div>`;
+    list.appendChild(item);
   });
 }
 
-/* ═══════════════════════════════════
-   SETTINGS
-═══════════════════════════════════ */
+/* ════════════════════════════════════════
+   SETTINGS SCREEN
+   ════════════════════════════════════════ */
 function renderSettings() {
-  ['showJp','autoSpeak','showScore'].forEach(k=>{
-    document.getElementById('tog-'+k)?.classList.toggle('on',CFG[k]);
+  // Toggles
+  ['jp','autoSpeak','score'].forEach(k => {
+    const mapKey = { jp: 'showJp', autoSpeak: 'autoSpeak', score: 'showScore' }[k];
+    document.getElementById(`toggle-${k}`)?.classList.toggle('on', settings[mapKey]);
   });
-  document.getElementById('goalSel').value=CFG.goal;
-  document.getElementById('lvlSel').value=CFG.level;
+
+  // Selects
+  document.getElementById('dailyGoalSelect').value = settings.dailyGoal;
+  document.getElementById('levelSelect').value = settings.level;
 
   // Characters
-  const cg=document.getElementById('charGrid');
-  cg.innerHTML='';
-  CHARS.forEach(c=>{
-    const d=document.createElement('div');
-    d.className=`char-card${c.id===CFG.char?' sel':''}`;
-    d.innerHTML=`<div class="char-av">${c.av}</div><div class="char-nm">${c.n}</div><div class="char-rl">${c.r}</div>`;
-    d.onclick=()=>{
-      CFG.char=c.id; saveAll();
-      document.querySelectorAll('.char-card').forEach(e=>e.classList.remove('sel'));
-      d.classList.add('sel'); toast(`${c.n} を選びました`);
+  const grid = document.getElementById('charGrid');
+  grid.innerHTML = '';
+  CHARACTERS.forEach(c => {
+    const card = document.createElement('div');
+    card.className = `char-card${c.id === settings.character ? ' selected' : ''}`;
+    card.innerHTML = `<div class="char-avatar">${c.avatar}</div>
+      <div class="char-name">${c.name}</div>
+      <div class="char-role">${c.role}</div>`;
+    card.onclick = () => {
+      settings.character = c.id;
+      document.querySelectorAll('.char-card').forEach(el => el.classList.remove('selected'));
+      card.classList.add('selected');
+      save();
+      showToast(`${c.name} を選びました`);
     };
-    cg.appendChild(d);
+    grid.appendChild(card);
   });
 
-  // Install guide (platform detection)
-  const ua=navigator.userAgent;
-  const isIOS=/iPhone|iPad|iPod/i.test(ua);
-  const isAndroid=/Android/i.test(ua);
-  const guide=document.getElementById('installGuide');
-  if(isIOS){
-    guide.innerHTML=`<strong>iPhone / iPad</strong><br>
-      1. Safari でこのページを開く<br>
-      2. 画面下の 共有ボタン (□↑) をタップ<br>
-      3.「ホーム画面に追加」を選択<br>
-      4. 右上の「追加」をタップ`;
-  } else if(isAndroid){
-    guide.innerHTML=`<strong>Android (Chrome)</strong><br>
-      1. Chrome でこのページを開く<br>
-      2. 右上の メニュー (⋮) をタップ<br>
-      3.「ホーム画面に追加」を選択<br>
-      4.「追加」をタップ`;
-  } else {
-    guide.innerHTML=`<strong>スマホのブラウザ</strong>でこのページを開き、<br>
-      ブラウザのメニューから<br>「ホーム画面に追加」を選択してください。`;
-  }
+  // Install banner
+  document.getElementById('installBanner').style.display = deferredInstall ? 'flex' : 'none';
 }
 
-function tg(key,el) {
+function toggleSetting(key, el) {
   el.classList.toggle('on');
-  CFG[key]=el.classList.contains('on');
-  saveAll();
-}
-function saveGoal()  { CFG.goal=parseInt(document.getElementById('goalSel').value); saveAll(); renderHome(); }
-function saveLevel() { CFG.level=document.getElementById('lvlSel').value; saveAll(); }
-function resetAll()  {
-  if(!confirm('すべての学習データをリセットしますか？')) return;
-  HIST=[]; STATS={total:0,days:0,streak:1,lastDate:'',scores:[]};
-  ST.progress=0; saveAll(); renderHome(); toast('データをリセットしました');
+  settings[key] = el.classList.contains('on');
+  save();
 }
 
-/* ═══════════════════════════════════
+function saveDailyGoal() {
+  settings.dailyGoal = parseInt(document.getElementById('dailyGoalSelect').value);
+  save();
+  renderHome();
+}
+
+function saveLevel() {
+  settings.level = document.getElementById('levelSelect').value;
+  save();
+}
+
+function resetData() {
+  if (!confirm('すべての学習データをリセットしますか？この操作は元に戻せません。')) return;
+  history = [];
+  stats = { total:0, days:0, scores:[] };
+  state.progress = 0;
+  save();
+  showToast('データをリセットしました');
+  renderHome();
+}
+
+/* ════════════════════════════════════════
    TTS
-═══════════════════════════════════ */
-function tts(text) {
-  if(!window.speechSynthesis) return;
-  const char=CHARS.find(c=>c.id===CFG.char)||CHARS[0];
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang=char.v; u.rate=0.88; u.pitch=1;
+   ════════════════════════════════════════ */
+function tts(text, lang = 'en-US') {
+  if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(u);
+  const char = CHARACTERS.find(c => c.id === settings.character);
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = char?.voice || lang;
+  utt.rate = 0.9;
+  utt.pitch = 1;
+  window.speechSynthesis.speak(utt);
 }
 
-/* ═══════════════════════════════════
-   TOAST
-═══════════════════════════════════ */
-function toast(msg) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2600);
+/* ════════════════════════════════════════
+   UTILS
+   ════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-/* ═══════════════════════════════════
-   PWA / SERVICE WORKER
-═══════════════════════════════════ */
-if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(reg=>{
-    reg.addEventListener('updatefound',()=>{
-      const nw=reg.installing;
-      nw.addEventListener('statechange',()=>{
-        if(nw.state==='installed' && navigator.serviceWorker.controller){
-          document.getElementById('updateBar').classList.add('show');
-        }
-      });
+function closeComplete() {
+  document.getElementById('completeOverlay').classList.remove('show');
+}
+
+/* ════════════════════════════════════════
+   PWA: SERVICE WORKER + INSTALL
+   ════════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  // Inline SW blob
+  const swCode = `
+    const CACHE = 'talkgo-v1';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
     });
-  }).catch(()=>{});
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys =>
+        Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+      ));
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.url.includes('api.anthropic.com') ||
+          e.request.url.includes('fonts.googleapis.com')) return;
+      e.respondWith(
+        caches.match(e.request).then(cached => {
+          if (cached) return cached;
+          return fetch(e.request).then(res => {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+            return res;
+          }).catch(() => cached);
+        })
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'text/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
 }
 
-/* ═══════════════════════════════════
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstall = e;
+  document.getElementById('installBanner').style.display = 'flex';
+});
+
+function doInstall() {
+  if (!deferredInstall) {
+    showToast('インストール: ブラウザメニュー →「ホーム画面に追加」');
+    return;
+  }
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(r => {
+    if (r.outcome === 'accepted') {
+      showToast('🎉 インストールしました！');
+      deferredInstall = null;
+      document.getElementById('installBanner').style.display = 'none';
+    }
+  });
+}
+
+/* ════════════════════════════════════════
+   QUICK PHRASE GRIDS
+   ════════════════════════════════════════ */
+function buildQuickGridPrac() {
+  const phrases = (PHRASES[state.scene] || PHRASES.greeting).slice(0, 8);
+  const grid = document.getElementById('quickGridPrac');
+  grid.innerHTML = '';
+  phrases.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'quick-item';
+    div.innerHTML = `<div class="quick-icon">${p.icon}</div>
+      <div class="quick-jp">${p.jp}</div>
+      <div class="quick-en">${p.en}</div>`;
+    div.onclick = () => selectPhrase(p);
+    grid.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════
    BOOT
-═══════════════════════════════════ */
-loadAll();
-buildTabs('hScenes',()=>{ renderHome(); buildQuickGrid('pQuick',8,pickPhrase); });
-buildTabs('pScenes',()=>{ buildQuickGrid('pQuick',8,pickPhrase); });
-buildQuickGrid('pQuick',8,pickPhrase);
-document.getElementById('pBadge').textContent=`${ST.progress} / ${CFG.goal}`;
+   ════════════════════════════════════════ */
+load();
+buildSceneTabs('sceneTabs', () => { renderHome(); });
+buildSceneTabs('sceneTabsPrac', () => { buildQuickGridPrac(); });
+buildQuickGridPrac();
 renderHome();
+updatePracBadge();
+
+// Rebuild quick grid on scene change
+const origBuild = buildQuickGridPrac;
 </script>
 </body>
 </html>
