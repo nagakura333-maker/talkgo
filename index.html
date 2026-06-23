@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -1692,6 +1693,7 @@ function resetData() {
    ════════════════════════════════════════ */
 function tts(text, lang = 'en-US') {
   if (!window.speechSynthesis) return;
+
   window.speechSynthesis.cancel();
   const char = CHARACTERS.find(c => c.id === settings.character);
   const utt = new SpeechSynthesisUtterance(text);
